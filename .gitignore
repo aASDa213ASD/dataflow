@@ -1,3 +1,7 @@
+# ATTENTION
+# Do not PR your own changes of .gitignore to git
+# this file is meant to stay as it is
+
 # Symfony framework
 /.env.local
 /.env.local.php
