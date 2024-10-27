@@ -3,6 +3,7 @@
 # this file is meant to stay as it is
 
 # Symfony framework
+/.env
 /.env.local
 /.env.local.php
 /.env.*.local
@@ -10,3 +11,9 @@
 /public/bundles/
 /var/
 /vendor/
+
+# Development stuff
+/.gitignore/
+/.idea/
+/.vscode/
+
