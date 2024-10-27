@@ -22,17 +22,6 @@ class DiskService
 
 		if ($this->config->getOperatingSystem() === 'linux')
 		{
-			/*
-			$output = shell_exec("df -h --output=source,size,target | grep '^/dev/'");
-			$lines = explode(PHP_EOL, trim($output));
-			$disks = array_filter($lines, fn($line) => !empty(trim($line)));
-
-			foreach ($disks as $line)
-			{
-				$disks[] = trim($line);
-			}
-			*/
-
 			$output = shell_exec("df -h --output=source,size,used,avail,pcent,target | grep '^/dev'");
 			$lines = explode(PHP_EOL, trim($output));
 			$lines = array_filter($lines, fn($line) => !empty(trim($line)));
