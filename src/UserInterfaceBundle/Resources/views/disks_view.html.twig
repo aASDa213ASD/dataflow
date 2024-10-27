@@ -1,3 +1,9 @@
-{% for disk in disks %}
-    <p>{{ disk.getName() }}</p>
-{% endfor %}
+{% extends "base.html.twig" %}
+
+{% block title %} Dataflow - disks{% endblock %}
+
+{% block body %}
+    {% for disk in disks %}
+        <p class="font-bold underline">{{ disk.getName() }}</p>
+    {% endfor %}
+{% endblock %}
