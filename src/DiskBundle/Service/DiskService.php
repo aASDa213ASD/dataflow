@@ -9,7 +9,7 @@ use App\DiskBundle\Entity\DiskDTO;
 
 class DiskService
 {
-	private ConfigService $configService;
+	private ConfigService $config;
 
 	public function __construct(ConfigService $config)
 	{
