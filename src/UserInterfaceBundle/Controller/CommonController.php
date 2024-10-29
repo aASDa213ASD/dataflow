@@ -31,12 +31,12 @@ class CommonController extends AbstractController
 		]);
 	}
 
-	#[Route('/dev/{disk_name}', name: 'files')]
+	#[Route('/{disk_name}', name: 'files')]
 	public function files(string $disk_name): Response
 	{
 		$disks = $this->diskService->getAvailableDisks();
-		$disk = $this->diskService->getDiskByName("/dev/{$disk_name}");
-
+		$disk = $this->diskService->getDiskByName($disk_name);
+		
 		if ($disk)
 		{
 			$files = $this->fileService->getFilesFromDisk($disk);

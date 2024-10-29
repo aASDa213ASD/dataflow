@@ -31,12 +31,18 @@ class FileService
 
 		foreach ($items as $item)
 		{
+			$path = $mountpoint . DIRECTORY_SEPARATOR . $item;
+			
 			if ($item === '.' || $item === '..')
 			{
 				continue;
 			}
 
-			$path = $mountpoint . DIRECTORY_SEPARATOR . $item;
+			if (!is_readable($path))
+			{
+				continue;
+			}
+
 			$size = is_dir($path) ? 0 : filesize($path);
 			$modificationTime = filemtime($path);
 			$files[] = new FileDTO($item, $path, $size, $modificationTime);

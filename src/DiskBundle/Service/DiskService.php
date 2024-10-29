@@ -41,10 +41,9 @@ class DiskService
 		}
 		elseif ($this->config->getOperatingSystem() === 'windows')
 		{
-			// Windows-specific command using WMIC
-			$output = shell_exec('wmic logicaldisk get Caption,Size,FreeSpace');
-			$lines = explode(PHP_EOL, trim($output));
-			$lines = array_filter($lines, fn($line) => !empty(trim($line)) && strpos($line, 'Caption') === false);
+			$output = shell_exec('powershell -command "Get-PSDrive -PSProvider FileSystem | Select-Object Root, Used, Free"');
+			$lines = explode("\n", trim($output));
+			$lines = array_slice($lines, 2);
 
 			foreach ($lines as $line)
 			{
@@ -54,13 +53,15 @@ class DiskService
 					continue;
 				}
 
-				[$filesystem, $freeSpace, $totalSpace] = $columns;
+				[$filesystem, $usedSpace, $freeSpace] = $columns;
 
-				$size = (int)$totalSpace;
+				// Convert string values to integers
 				$avail = (int)$freeSpace;
-				$used = $size - $avail;
+				$used = (int)$usedSpace;
+				$size = $used + $avail;
 				$usedPercentage = $size > 0 ? ($used / $size) * 100 : 0;
 
+				// Now call formatSize with integer arguments
 				$disk = new DiskDTO(
 					$filesystem,
 					$this->formatSize($size),
@@ -73,6 +74,7 @@ class DiskService
 			}
 		}
 
+
 		return $disks;
 	}
 
@@ -80,6 +82,11 @@ class DiskService
 	{
 		$disks = $this->getAvailableDisks();
 
+		if ($this->config->getOperatingSystem() === 'linux')
+		{
+			$name = "/dev/{$name}";
+		}
+		
 		foreach ($disks as $disk)
 		{
 			if ($disk->getName() === $name)
@@ -104,5 +111,18 @@ class DiskService
 		}
 
 		return null;
+	}
+
+	private function formatSize(int $bytes): string
+	{
+		$units = ['B', 'KB', 'MB', 'GB', 'TB'];
+		$unitIndex = 0;
+
+		while ($bytes >= 1024 && $unitIndex < count($units) - 1) {
+			$bytes /= 1024;
+			$unitIndex++;
+		}
+
+		return round($bytes, 2) . ' ' . $units[$unitIndex];
 	}
 }
