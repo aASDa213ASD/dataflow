@@ -41,32 +41,39 @@ class DiskService
 		}
 		elseif ($this->config->getOperatingSystem() === 'windows')
 		{
-			$output = shell_exec('powershell -command "Get-PSDrive -PSProvider FileSystem | Select-Object Root, Used, Free"');
-			$lines = explode("\n", trim($output));
-			$lines = array_slice($lines, 2);
+			$output = shell_exec('fsutil fsinfo drives'); // fsutil fsinfo ntfsInfo C:
+			$output = str_replace('Drives: ', '', $output);
+			$lines = explode(' ', trim($output));
 
 			foreach ($lines as $line)
 			{
-				$columns = preg_split('/\s+/', trim($line));
-				if (count($columns) < 3)
+				$disk_info = shell_exec("fsutil fsinfo ntfsInfo {$line}");
+				$disk_info = str_replace(' ', '', $disk_info);
+				$columns = explode("\n", trim($disk_info));
+				
+				$relative_data = [];
+				$relative_data[] = $columns[4]; // total sectors 
+				$relative_data[] = $columns[5]; // free clusters
+
+				foreach ($relative_data as $index => $data)
 				{
-					continue;
+					if (preg_match('/([\d,]+)\s?\(/', $data, matches: $matches))
+					{
+						$value = (int) str_replace(',', '', $matches[1]);
+						$relative_data[$index] = $value;
+					}
 				}
-
-				[$filesystem, $usedSpace, $freeSpace] = $columns;
-
-				// Convert string values to integers
-				$avail = (int)$freeSpace;
-				$used = (int)$usedSpace;
-				$size = $used + $avail;
+				
+				$size = $relative_data[0];
+				$used = $relative_data[0] - $relative_data[1];
 				$usedPercentage = $size > 0 ? ($used / $size) * 100 : 0;
-
+				
 				// Now call formatSize with integer arguments
 				$disk = new DiskDTO(
-					$filesystem,
-					$this->formatSize($size),
-					$filesystem,
-					$this->formatSize($used),
+					$line,
+					$this->bytesToReadableSize($size),
+					$line,
+					$this->bytesToReadableSize($used),
 					round($usedPercentage, 2)
 				);
 
@@ -113,7 +120,7 @@ class DiskService
 		return null;
 	}
 
-	private function formatSize(int $bytes): string
+	private function bytesToReadableSize(int $bytes): string
 	{
 		$units = ['B', 'KB', 'MB', 'GB', 'TB'];
 		$unitIndex = 0;
