@@ -22,8 +22,13 @@ class DiskDTO
 		$this->usedPercentage = $usedPercentage;
 	}
 
-	public function getName(): string
+	public function getName(bool $readable = false): string
 	{
+		if ($readable)
+		{
+			return preg_replace('/^\/dev\//', '', $this->name);
+		}
+
 		return $this->name;
 	}
 
@@ -44,6 +49,6 @@ class DiskDTO
 
 	public function getUsedPercentage(): string
 	{
-		return number_format($this->usedPercentage, 2) . '%';
+		return $this->usedPercentage . '%';
 	}
 }

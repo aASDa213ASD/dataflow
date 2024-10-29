@@ -8,18 +8,16 @@ namespace App\FileBundle\Entity;
 class FileDTO
 {
 	private string $name;
-	private string $size;
-	private string $mountpoint;
-	private string $used;
-	private float $usedPercentage;
+	private string $path;
+	private int $size;
+	private int $modificationTime;
 
-	public function __construct(string $name, string $size, string $mountpoint, string $used, float $usedPercentage)
+	public function __construct(string $name, string $path, int $size, int $modificationTime)
 	{
 		$this->name = $name;
+		$this->path = $path;
 		$this->size = $size;
-		$this->mountpoint = $mountpoint;
-		$this->used = $used;
-		$this->usedPercentage = $usedPercentage;
+		$this->modificationTime = $modificationTime;
 	}
 
 	public function getName(): string
@@ -27,23 +25,39 @@ class FileDTO
 		return $this->name;
 	}
 
-	public function getSize(): string
+	public function getPath(): string
+	{
+		return $this->path;
+	}
+
+	public function getSize(): int
 	{
 		return $this->size;
 	}
 
-	public function getMountpoint(): string
+	public function getFormattedSize(): string
 	{
-		return $this->mountpoint;
+		if ($this->size < 1024)
+		{
+			return $this->size . ' B';
+		}
+		elseif ($this->size < 1048576)
+		{
+			return round($this->size / 1024, 2) . ' KB';
+		}
+		else
+		{
+			return round($this->size / 1048576, 2) . ' MB';
+		}
 	}
 
-	public function getUsed(): string
+	public function getModificationTime(): int
 	{
-		return $this->used;
+		return $this->modificationTime;
 	}
 
-	public function getUsedPercentage(): string
+	public function getFormattedModificationTime(): string
 	{
-		return number_format($this->usedPercentage, 2) . '%';
+		return date("d M Y - H:i A", $this->modificationTime);
 	}
 }

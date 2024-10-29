@@ -1,16 +1,16 @@
 <!-- Sidebar -->
-<aside class="w-44 bg-zinc-900 rounded-lg text-[12px] h-full overflow-y-auto">
-    <ul class="my-2">
+<aside class="w-44 bg-zinc-900 rounded-lg text-[14px] h-full overflow-y-auto">
+    <ul class="my-5">
         {% for disk in disks %}
-            <li class="p-2 hover:bg-zinc-700/40 cursor-pointer flex flex-col transition-colors duration-100">
+            <a href="{{ path('files', { 'disk_name': disk.getName(true) }) }}" class="p-2 hover:bg-zinc-800/50 cursor-pointer flex flex-col">
                 <div class="flex items-center">
-                    <i class="nf nf-md-harddisk me-1 text-white"></i>
+                    <i class="nf nf-md-harddisk me-1 text-indigo-200"></i>
                     <span class="text-white">{{ disk.getMountpoint() }} <span class="text-zinc-500">{{ disk.getSize() }}</span></span>
                 </div>
                 <div class="w-full bg-gray-700 h-1 mt-1">
                     <div class="bg-indigo-200 h-full" style="width: {{ disk.getUsedPercentage() }};"></div>
                 </div>
-            </li>
+            </a>
         {% endfor %}
     </ul>
 </aside>

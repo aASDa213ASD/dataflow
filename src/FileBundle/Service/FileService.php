@@ -6,7 +6,7 @@ namespace App\FileBundle\Service;
 
 use App\AppBundle\Service\ConfigService;
 use App\DiskBundle\Entity\DiskDTO;
-use App\DiskBundle\Entity\FileDTO;
+use App\FileBundle\Entity\FileDTO;
 
 class FileService
 {
@@ -19,12 +19,29 @@ class FileService
 
 	public function getFilesFromDisk(DiskDTO $disk): array
 	{
-		$mount_point = $disk->getMountpoint();
+		$mountpoint = $disk->getMountpoint();
 
-		if (!is_dir($mount_point)) {
+		if (!is_dir($mountpoint))
+		{
 			return [];
 		}
 
-		return array_diff(scandir($mount_point), ['.', '..']);
+		$files = [];
+		$items = scandir($mountpoint);
+
+		foreach ($items as $item)
+		{
+			if ($item === '.' || $item === '..')
+			{
+				continue;
+			}
+
+			$path = $mountpoint . DIRECTORY_SEPARATOR . $item;
+			$size = is_dir($path) ? 0 : filesize($path);
+			$modificationTime = filemtime($path);
+			$files[] = new FileDTO($item, $path, $size, $modificationTime);
+		}
+
+		return $files;
 	}
 }

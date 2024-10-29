@@ -21,25 +21,32 @@ class CommonController extends AbstractController
 		$this->fileService = $fileService;
 	}
 
-	#[Route('/disks', name: 'disks')]
-	public function viewDisks(): Response
+	#[Route('/', name: 'disk_selection')]
+	public function disks(): Response
 	{
 		$disks = $this->diskService->getAvailableDisks();
 
-		return $this->render('@UserInterface/disks_view.html.twig', [
-			'disks' => $disks
+		return $this->render('@UserInterface/disk_selection.html.twig', [
+			'disks' => $disks,
 		]);
 	}
 
-	#[Route('/files', name: 'files')]
-	public function viewFiles(): Response
+	#[Route('/dev/{disk_name}', name: 'files')]
+	public function files(string $disk_name): Response
 	{
 		$disks = $this->diskService->getAvailableDisks();
-		$files = $this->fileService->getFilesFromDisk($disks[0]);
+		$disk = $this->diskService->getDiskByName("/dev/{$disk_name}");
 
-		return $this->render('@UserInterface/disks_view.html.twig', [
-			'disks' => $disks,
-			'files' => $files
-		]);
+		if ($disk)
+		{
+			$files = $this->fileService->getFilesFromDisk($disk);
+
+			return $this->render('@UserInterface/files_view.html.twig', [
+				'disks' => $disks,
+				'files' => $files,
+			]);
+		}
+
+		return $this->redirectToRoute('disk_selection');
 	}
 }

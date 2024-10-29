@@ -1,0 +1,29 @@
+{% extends "base.html.twig" %}
+
+{% block title %} Dataflow - files {% endblock %}
+
+{% block sidebar %}
+    {% include "@UserInterface/sidebar.html.twig" %}
+{% endblock %}
+
+{% block body %}
+    <!-- Search bar -->
+    <div class="flex">
+        <div class="text-white text-[16px] p-1">
+            <span>{{ app.request.pathInfo }}</span>
+        </div>
+        <div class="relative mb-4 ms-auto text-[15px]">
+            <input type="text" id="fileSearch" placeholder="Search" class="w-full p-1 pl-10 bg-transparent text-white border-b-2 border-zinc-500 outline-none" />
+            <i class="nf nf-md-file_search absolute left-3 top-2 text-zinc-500"></i> <!-- Search Icon Inside -->
+        </div>
+    </div>
+
+    {% for file in files %}
+        <div class="p-1 text-[12px] hover:bg-zinc-700/40 cursor-pointer flex flex-col">
+            <div class="flex items-center">
+                <i class="nf nf-cod-file me-1 text-white"></i>
+                <span class="text-white">{{ file.getName() }}</span>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}
