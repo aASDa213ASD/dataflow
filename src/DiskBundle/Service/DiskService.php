@@ -49,7 +49,7 @@ class DiskService
 			{
 				$disk_info = shell_exec("fsutil volume diskfree {$line}");
 				$disk_info = str_replace(' ', '', $disk_info);
-				$disk_info = str_replace('AlocalNTFSvolumeisrequiredforthisoperation', '', $disk_info);
+				$disk_info = str_replace('AlocalNTFSvolumeisrequiredforthisoperation.', '', $disk_info);
 				$columns = explode("\n", trim($disk_info));
 			
 				$data = [];
