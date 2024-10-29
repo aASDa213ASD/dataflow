@@ -86,7 +86,7 @@ class DiskService
 		{
 			$name = "/dev/{$name}";
 		}
-		
+
 		foreach ($disks as $disk)
 		{
 			if ($disk->getName() === $name)
@@ -118,7 +118,8 @@ class DiskService
 		$units = ['B', 'KB', 'MB', 'GB', 'TB'];
 		$unitIndex = 0;
 
-		while ($bytes >= 1024 && $unitIndex < count($units) - 1) {
+		while ($bytes >= 1024 && $unitIndex < count($units) - 1)
+		{
 			$bytes /= 1024;
 			$unitIndex++;
 		}
