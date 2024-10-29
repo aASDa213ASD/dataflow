@@ -47,34 +47,32 @@ class DiskService
 
 			foreach ($lines as $line)
 			{
-				$disk_info = shell_exec("fsutil fsinfo ntfsInfo {$line}");
+				$disk_info = shell_exec("fsutil volume diskfree {$line}");
 				$disk_info = str_replace(' ', '', $disk_info);
 				$columns = explode("\n", trim($disk_info));
 				
-				$relative_data = [];
-				$relative_data[] = $columns[4]; // total sectors 
-				$relative_data[] = $columns[5]; // free clusters
+				$data = [];
+				$data['free_bytes'] = $columns[0]; // free bytes
+				$data['total_bytes'] = $columns[1]; // total bytes 
+				$data['used_bytes'] = $columns[5]; // used bytes
 
-				foreach ($relative_data as $index => $data)
+				foreach ($data as $key => $value)
 				{
-					if (preg_match('/([\d,]+)\s?\(/', $data, matches: $matches))
+					if (preg_match('/([\d,]+)\s?\(/', $value, matches: $matches))
 					{
-						$value = (int) str_replace(',', '', $matches[1]);
-						$relative_data[$index] = $value;
+						$bytes = (int) str_replace(',', '', $matches[1]);
+						$data[$key] = $bytes;
 					}
 				}
 				
-				$size = $relative_data[0];
-				$used = $relative_data[0] - $relative_data[1];
-				$usedPercentage = $size > 0 ? ($used / $size) * 100 : 0;
+				$used_percentage = $data['total_bytes'] > 0 ? ($data['used_bytes'] / $data['total_bytes']) * 100 : 0;
 				
-				// Now call formatSize with integer arguments
 				$disk = new DiskDTO(
 					$line,
-					$this->bytesToReadableSize($size),
+					$this->bytesToReadableSize($data['total_bytes']),
 					$line,
-					$this->bytesToReadableSize($used),
-					round($usedPercentage, 2)
+					$this->bytesToReadableSize($data['used_bytes']),
+					round($used_percentage, 2)
 				);
 
 				$disks[] = $disk;
