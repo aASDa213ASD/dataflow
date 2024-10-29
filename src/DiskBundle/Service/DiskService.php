@@ -50,11 +50,10 @@ class DiskService
 				$disk_info = shell_exec("fsutil volume diskfree {$line}");
 				$disk_info = str_replace(' ', '', $disk_info);
 				$columns = explode("\n", trim($disk_info));
-				
+			
 				$data = [];
-				$data['free_bytes'] = $columns[0]; // free bytes
+				$data['free_bytes'] = $columns[0];  // free bytes
 				$data['total_bytes'] = $columns[1]; // total bytes 
-				$data['used_bytes'] = $columns[5]; // used bytes
 
 				foreach ($data as $key => $value)
 				{
@@ -65,13 +64,14 @@ class DiskService
 					}
 				}
 				
-				$used_percentage = $data['total_bytes'] > 0 ? ($data['used_bytes'] / $data['total_bytes']) * 100 : 0;
+				$used = $data['total_bytes'] - $data['free_bytes'];
+				$used_percentage = $data['total_bytes'] > 0 ? ($used / $data['total_bytes']) * 100 : 0;
 				
 				$disk = new DiskDTO(
 					$line,
 					$this->bytesToReadableSize($data['total_bytes']),
 					$line,
-					$this->bytesToReadableSize($data['used_bytes']),
+					$this->bytesToReadableSize($used),
 					round($used_percentage, 2)
 				);
 
