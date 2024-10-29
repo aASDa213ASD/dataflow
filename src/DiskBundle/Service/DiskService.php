@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\DiskBundle\Service;
 
 use App\AppBundle\Service\ConfigService;
-use App\DiskBundle\Entity\Disk;
+use App\DiskBundle\Entity\DiskDTO;
 
 class DiskService
 {
@@ -30,7 +30,7 @@ class DiskService
 			{
 				[$filesystem, $size, $used, $avail, $usedPercentage, $mountPoint] = preg_split('/\s+/', trim($line));
 
-				$disk = new Disk(
+				$disk = new DiskDTO(
 					$filesystem, $size,
 					$mountPoint, $used,
 					(float)rtrim($usedPercentage, '%')

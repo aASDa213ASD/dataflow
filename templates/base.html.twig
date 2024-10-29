@@ -13,7 +13,16 @@
             {% include "js.html.twig" %}
         {% endblock %}
     </head>
-    <body>
-        {% block body %}{% endblock %}
+    <body class="min-h-screen flex items-center justify-center bg-slateDarkest text-white font-sans">
+        <!-- Main Container with Sidebar and Content Area -->
+        <div class="aspect-[16/9] w-full max-w-5xl bg-slateLight shadow-neon-teal rounded-lg flex border border-gray-500">
+            {% block sidebar %}
+            {% endblock %}
+
+            <main class="flex-1 p-4 overflow-y-auto">
+                {% block body %}
+                {% endblock %}
+            </main>
+        </div>
     </body>
 </html>

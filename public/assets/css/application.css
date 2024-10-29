@@ -1,0 +1,57 @@
+@font-face {
+    font-family: "Nunito";
+    src: url("../fonts/nunito/Nunito-VariableFont_wght.ttf") format("truetype");
+}
+
+body
+{
+    font-family: "Nunito";
+}
+
+.color-tester
+{
+    color: rgba(24, 26, 30, 0.5);
+}
+
+/* Scrollbar hidden */
+body::-webkit-scrollbar
+{
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none;    /* Firefox */
+    display: none;            /* Chrome, Safari, Opera */
+}
+
+::-webkit-scrollbar
+{
+    background-color: transparent !important;
+    width: 3px;
+}
+
+::-webkit-scrollbar-thumb
+{
+    background: rgba(0, 0, 0, 0.3);
+}
+
+/* Selection colors */
+::selection
+{
+    color: #000000;
+    background-color: #cacaca;
+}
+
+::-moz-selection
+{
+    color: #000000;
+    background-color: #cacaca;
+}
+
+/* Nerd font */
+.nf
+{
+    font-family: "NerdFontsSymbols Nerd Font";
+    display: inline-flex;
+    align-items: center;
+    vertical-align: middle;
+    line-height: 1;
+    margin-bottom: 3px;
+}

@@ -2,8 +2,21 @@
 
 {% block title %} Dataflow - disks{% endblock %}
 
+{% block sidebar %}
+    {% include "@UserInterface/sidebar.html.twig" %}
+{% endblock %}
+
 {% block body %}
-    {% for disk in disks %}
-        <p class="font-bold underline">{{ disk.getName() }}</p>
+    <!--
+    <p class="text-gray-400 italic">TODO: If no disk was selected yet display a list of disks here in the same passion</p>
+    <p class="text-gray-400 italic">TODO: If disk is selected show files</p>
+    -->
+    {% for file in files %}
+        <div class="p-2 hover:bg-zinc-700/40 cursor-pointer flex flex-col transition-colors duration-100">
+            <div class="flex items-center">
+                <i class="nf nf-cod-file me-1 text-white"></i>
+                <span class="text-white">{{ file }}</span>
+            </div>
+        </div>
     {% endfor %}
 {% endblock %}

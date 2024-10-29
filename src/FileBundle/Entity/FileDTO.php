@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\DiskBundle\Entity;
+namespace App\FileBundle\Entity;
 
 
-class Disk
+class FileDTO
 {
 	private string $name;
 	private string $size;
