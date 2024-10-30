@@ -46,15 +46,8 @@ class FileService
 			$is_directory = is_dir($path);
 			$size = $is_directory ? 0 : filesize($path);
 			$modificationTime = filemtime($path);
-			$extension = !$is_directory ? pathinfo($item, PATHINFO_EXTENSION) : null;
-
-			$type = 'directory';
-			if (!$is_directory) 
-			{
-				$type = $extension ? 'file_with_extension' : 'file_without_extension';
-			}
-
-			$files[] = new FileDTO($item, $path, $size, $modificationTime, $type);
+			
+			$files[] = new FileDTO($item, $path, $size, $modificationTime, $is_directory);
 		}
 
 		return $files;

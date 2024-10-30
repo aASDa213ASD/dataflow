@@ -11,15 +11,15 @@ class FileDTO
 	private string $path;
 	private int $size;
 	private int $modification_time;
-	private string $type;
+	private bool $is_directory;
 
-	public function __construct(string $name, string $path, int $size, int $modification_time, string $type)
+	public function __construct(string $name, string $path, int $size, int $modification_time, bool $is_directory)
 	{
 		$this->name = $name;
 		$this->path = $path;
 		$this->size = $size;
 		$this->modification_time = $modification_time;
-		$this->type = $type;
+		$this->is_directory = $is_directory;
 	}
 
 	public function getName(): string
@@ -63,9 +63,9 @@ class FileDTO
 		return date("d M Y - H:i A", $this->modification_time);
 	}
 
-	public function getType(): string
+	public function getIsDirectory(): bool
 	{
-		return $this->type;
+		return $this->is_directory;
 	}
 }
 
