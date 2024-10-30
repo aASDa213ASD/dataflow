@@ -1,7 +1,7 @@
 <aside class="w-44 bg-zinc-900 rounded-l-lg text-[14px] min-h-full overflow-y-auto">
     <ul class="mt-[20px]">
         {% for disk in disks %}
-            <a href="{{ path('files', { 'disk_name': disk.getName(true) }) }}" class="p-2 hover:bg-zinc-800/50 cursor-pointer flex flex-col">
+            <a href="{{ path('files', { 'disk_name': disk.getName(true), 'path': disk.getMountPoint() }) }}" class="p-2 hover:bg-zinc-800/50 cursor-pointer flex flex-col">
                 <div class="flex items-center">
                     <i class="nf nf-md-harddisk me-1 text-indigo-200"></i>
                     <span class="text-white">{{ disk.getMountpoint() }} <span class="text-zinc-500">{{ bytesToReadableSize(disk.getSize()) }}</span></span>

@@ -17,35 +17,33 @@ class FileService
 		$this->config = $config;
 	}
 
-	public function getFilesFromDisk(DiskDTO $disk, string $folder_path = ''): array
+	public function getFilesFromDisk(string $path): array
 	{
-		$mountpoint = $disk->getMountpoint() . DIRECTORY_SEPARATOR . trim($folder_path, '/');
-
-		if (!is_dir($mountpoint))
+		if (!is_dir($path))
 		{
 			return [];
 		}
 
 		$files = [];
-		$items = scandir($mountpoint);
+		$items = scandir($path);
 
 		foreach ($items as $item)
 		{
-			$path = $mountpoint . DIRECTORY_SEPARATOR . $item;
+			$file_path = $path . DIRECTORY_SEPARATOR . $item;
 
 			if ($item === '.' || $item === '..')
 			{
 				continue;
 			}
 
-			if (!is_readable($path))
+			if (!is_readable($file_path))
 			{
 				continue;
 			}
 
 			$type = 'Folder';
 
-			if (!is_dir($path))
+			if (!is_dir($file_path))
 			{
 				try
 				{
@@ -57,10 +55,10 @@ class FileService
 				}
 			}
 
-			$size = filesize($path);
-			$modificationTime = filemtime($path);
+			$size = filesize($file_path);
+			$modificationTime = filemtime($file_path);
 
-			$files[] = new FileDTO($path, $item, $type, $size, $modificationTime);
+			$files[] = new FileDTO($file_path, $item, $type, $size, $modificationTime);
 		}
 
 		return $files;

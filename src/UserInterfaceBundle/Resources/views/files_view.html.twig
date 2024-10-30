@@ -8,9 +8,8 @@
 
 {% block body %}
     <div class="flex">
-        <div class="text-zinc-500 text-[16px] p-1">
-            <span>{{ disk.getMountPoint() }}</span>
-            <p>Path: {{ path ? path : disk.getMountPoint() }}</p>
+        <div class="text-zinc-500 font-bold text-[16px] p-1 hover:underline cursor-pointer">
+            <span>{{ path }}</span>
         </div>
         <div class="relative mb-4 ms-auto text-[15px]">
             <!--
@@ -26,10 +25,10 @@
         </div>
     </div>
 
-    <table class="table-fixed w-full text-left text-[14px]">
+    <table class="table-auto w-full text-left text-[14px] overflow-hidden whitespace-nowrap text-ellipsis">
         <thead>
         <tr class="text-zinc-500">
-            <th class="w-1/4">Name</th>
+            <th class="w-1/2">Name</th>
             <th class="w-1/4">Size</th>
             <th class="w-1/4">Type</th>
             <th class="w-1/4">Date Modified</th>
@@ -40,14 +39,18 @@
             <tr class="text-slate-200 hover:bg-zinc-800 cursor-pointer">
                 <td class="w-1/4 py-1">
                     {% if file.getType() == 'Folder' %}
-                        <i class="nf nf-md-folder mx-2 mb-1 text-yellow-200"></i>
+                        <i class="nf nf-md-folder ml-2 mr-1 mb-1 text-amber-100"></i>
                     {% else %}
-                        <i class="nf nf-md-file mx-2 mb-1 text-slate-300"></i>
+                        <i class="nf nf-md-file ml-2 mr-1 mb-1 text-slate-400"></i>
                     {% endif %}
 
-                    <a href="{{ path('files', { disk_name: disk.getName(true), path: disk.getMountPoint() ~ '/' ~ file.getName() }) }}">
+                    {% if file.getType() == 'Folder' %}
+                        <a href="{{ path('files', { disk_name: disk.getName(true), path: path != '/' ? path ~ '/' ~ file.getName() : path ~ file.getName() }) }}">
+                            <span class="hover:underline">{{ file.getName() }}</span>
+                        </a>
+                    {% else %}
                         <span class="hover:underline">{{ file.getName() }}</span>
-                    </a>
+                    {% endif %}
                 </td>
                 <td class="w-1/4">{{ bytesToReadableSize(file.getSize()) }}</td>
                 <td class="w-1/4">{{ file.getType() }}</td>

@@ -10,7 +10,7 @@
     <div class="flex">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {% for disk in disks %}
-                <a href="{{ path('files', { 'disk_name': disk.getName(true) }) }}" class="p-2 mb-1 w-[300px] bg-zinc-900 rounded-lg shadow-md hover:bg-zinc-800/50 cursor-pointer">
+                <a href="{{ path('files', { 'disk_name': disk.getName(true), 'path': disk.getMountPoint() }) }}" class="p-2 mb-1 w-[300px] bg-zinc-900 rounded-lg shadow-md hover:bg-zinc-800/50 cursor-pointer">
                     <div class="flex items-center mb-2">
                         <i class="nf nf-md-harddisk text-indigo-200 text-2xl mr-2"></i>
                         <span class="text-white font-medium">{{ disk.getName() }}</span>
