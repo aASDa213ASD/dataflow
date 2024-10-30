@@ -64,9 +64,9 @@ class FileDTO
 	}
 
 	public function getType(): string
-    {
-        return $this->type;
-    }
+	{
+		return $this->type;
+	}
 
 }
 

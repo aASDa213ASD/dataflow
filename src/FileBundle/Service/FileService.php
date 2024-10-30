@@ -43,13 +43,14 @@ class FileService
 				continue;
 			}
 
-			$isDirectory = is_dir($path);
-			$size = $isDirectory ? 0 : filesize($path);
+			$is_directory = is_dir($path);
+			$size = $is_directory ? 0 : filesize($path);
 			$modificationTime = filemtime($path);
-			$extension = !$isDirectory ? pathinfo($item, PATHINFO_EXTENSION) : null;
+			$extension = !$is_directory ? pathinfo($item, PATHINFO_EXTENSION) : null;
 
 			$type = 'directory';
-			if (!$isDirectory) {
+			if (!$is_directory) 
+			{
 				$type = $extension ? 'file_with_extension' : 'file_without_extension';
 			}
 
