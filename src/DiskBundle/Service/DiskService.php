@@ -6,6 +6,7 @@ namespace App\DiskBundle\Service;
 
 use App\AppBundle\Service\ConfigService;
 use App\DiskBundle\Entity\DiskDTO;
+use RuntimeException;
 
 class DiskService
 {
@@ -20,66 +21,77 @@ class DiskService
 	{
 		$disks = [];
 
-		if ($this->config->getOperatingSystem() === 'linux')
+		switch ($this->config->getOperatingSystem())
 		{
-			$output = shell_exec("df -h --output=source,size,used,avail,pcent,target | grep '^/dev'");
-			$lines = explode(PHP_EOL, trim($output));
-			$lines = array_filter($lines, fn($line) => !empty(trim($line)));
-
-			foreach ($lines as $line)
-			{
-				[$filesystem, $size, $used, $avail, $usedPercentage, $mountPoint] = preg_split('/\s+/', trim($line));
-
-				$disk = new DiskDTO(
-					$filesystem, $size,
-					$mountPoint, $used,
-					(float)rtrim($usedPercentage, '%')
-				);
-
-				$disks[] = $disk;
-			}
-		}
-		elseif ($this->config->getOperatingSystem() === 'windows')
-		{
-			$output = shell_exec('fsutil fsinfo drives'); // fsutil fsinfo ntfsInfo C:
-			$output = str_replace('Drives: ', '', $output);
-			$lines = explode(' ', trim($output));
-
-			foreach ($lines as $line)
-			{
-				$disk_info = shell_exec("fsutil volume diskfree {$line}");
-				$disk_info = str_replace(' ', '', $disk_info);
-				$disk_info = str_replace('AlocalNTFSvolumeisrequiredforthisoperation.', '', $disk_info);
-				$columns = explode("\n", trim($disk_info));
-			
-				$data = [];
-				$data['free_bytes'] = $columns[0];  // free bytes
-				$data['total_bytes'] = $columns[1]; // total bytes 
-
-				foreach ($data as $key => $value)
-				{
-					if (preg_match('/([\d,]+)\s?\(/', $value, matches: $matches))
-					{
-						$bytes = (int) str_replace(',', '', $matches[1]);
-						$data[$key] = $bytes;
-					}
-				}
-				
-				$used = $data['total_bytes'] - $data['free_bytes'];
-				$used_percentage = $data['total_bytes'] > 0 ? ($used / $data['total_bytes']) * 100 : 0;
-				
-				$disk = new DiskDTO(
-					$line,
-					$this->bytesToReadableSize($data['total_bytes']),
-					$line,
-					$this->bytesToReadableSize($used),
-					round($used_percentage, 2)
-				);
-
-				$disks[] = $disk;
-			}
+			case 'linux':
+				$disks = $this->getLinuxDisks();
+				break;
+			case 'windows':
+				$disks = $this->getWindowsDisks();
+				break;
+			default:
+				throw new RuntimeException("Unsupported operating system.");
 		}
 
+		return $disks;
+	}
+
+	private function getLinuxDisks(): array
+	{
+		$disks = [];
+		$output = shell_exec("df -h --output=source,size,used,avail,pcent,target | grep '^/dev'");
+		$lines = array_filter(explode(PHP_EOL, trim($output)), fn($line) => !empty(trim($line)));
+
+		foreach ($lines as $line)
+		{
+			[$filesystem, $size, $used, $avail, $usedPercentage, $mountPoint] = preg_split('/\s+/', trim($line));
+
+			$disk = new DiskDTO(
+				$filesystem, $size,
+				$mountPoint, $used,
+				(float)rtrim($usedPercentage, '%')
+			);
+
+			$disks[] = $disk;
+		}
+
+		return $disks;
+	}
+
+	private function getWindowsDisks(): array
+	{
+		$disks = [];
+		$output = shell_exec('fsutil fsinfo drives');
+		$drive_letters = explode(' ', trim(str_replace('Drives: ', '', $output)));
+
+		foreach ($drive_letters as $drive)
+		{
+			$diskInfo = shell_exec("fsutil volume diskfree {$drive}");
+
+			if (!$diskInfo)
+			{
+				continue;
+			}
+
+			preg_match_all('/\d+/', $diskInfo, $matches);
+			if (count($matches[0]) < 2)
+			{
+				continue;
+			}
+
+			$total_bytes = (int)$matches[0][1];
+			$free_bytes = (int)$matches[0][0];
+			$used_bytes = $total_bytes - $free_bytes;
+			$used_percentage = $total_bytes > 0 ? ($used_bytes / $total_bytes) * 100 : 0;
+
+			$disk = new DiskDTO(
+				$drive, $this->bytesToReadableSize($total_bytes),
+				$drive, $this->bytesToReadableSize($used_bytes),
+				round($used_percentage, 2)
+			);
+
+			$disks[] = $disk;
+		}
 
 		return $disks;
 	}
@@ -121,7 +133,7 @@ class DiskService
 
 	private function bytesToReadableSize(int $bytes): string
 	{
-		$units = ['B', 'KB', 'MB', 'GB', 'TB'];
+		$units = ['B', 'KB', 'M', 'G', 'T'];
 		$unitIndex = 0;
 
 		while ($bytes >= 1024 && $unitIndex < count($units) - 1)
