@@ -11,15 +11,15 @@ class DiskDTO
 	private string $size;
 	private string $mountpoint;
 	private string $used;
-	private float $usedPercentage;
+	private float $used_percentage;
 
-	public function __construct(string $name, string $size, string $mountpoint, string $used, float $usedPercentage)
+	public function __construct(string $name, string $size, string $mountpoint, string $used, float $used_percentage)
 	{
 		$this->name = $name;
 		$this->size = $size;
 		$this->mountpoint = $mountpoint;
 		$this->used = $used;
-		$this->usedPercentage = $usedPercentage;
+		$this->used_percentage = $used_percentage;
 	}
 
 	public function getName(bool $readable = false): string
@@ -49,6 +49,6 @@ class DiskDTO
 
 	public function getUsedPercentage(): string
 	{
-		return $this->usedPercentage . '%';
+		return $this->used_percentage . '%';
 	}
 }

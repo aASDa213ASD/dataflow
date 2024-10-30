@@ -11,10 +11,10 @@
     <p class="text-gray-400 italic">TODO: If no disk was selected yet display a list of disks here in the same passion</p>
     <p class="text-gray-400 italic">TODO: If disk is selected show files</p>
     -->
-    <div class="flex justify-center">
+    <div class="flex">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {% for disk in disks %}
-                <a href="{{ path('files', { 'disk_name': disk.getName(true) }) }}" class="p-2 mb-1 w-[260px] bg-zinc-900 rounded-lg shadow-md hover:bg-zinc-800/50 cursor-pointer">
+                <a href="{{ path('files', { 'disk_name': disk.getName(true) }) }}" class="p-2 mb-1 w-[300px] bg-zinc-900 rounded-lg shadow-md hover:bg-zinc-800/50 cursor-pointer">
                     <div class="flex items-center mb-2">
                         <i class="nf nf-md-harddisk text-indigo-200 text-2xl mr-2"></i>
                         <span class="text-white font-medium">{{ disk.getName() }}</span>

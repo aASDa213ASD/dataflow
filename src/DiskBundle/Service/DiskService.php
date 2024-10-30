@@ -19,21 +19,12 @@ class DiskService
 
 	public function getAvailableDisks(): array
 	{
-		$disks = [];
-
-		switch ($this->config->getOperatingSystem())
+		return match ($this->config->getOperatingSystem())
 		{
-			case 'linux':
-				$disks = $this->getLinuxDisks();
-				break;
-			case 'windows':
-				$disks = $this->getWindowsDisks();
-				break;
-			default:
-				throw new RuntimeException("Unsupported operating system.");
-		}
-
-		return $disks;
+			'linux' => $this->getLinuxDisks(),
+			'windows' => $this->getWindowsDisks(),
+			default => throw new RuntimeException("Unsupported operating system."),
+		};
 	}
 
 	private function getLinuxDisks(): array
@@ -44,12 +35,12 @@ class DiskService
 
 		foreach ($lines as $line)
 		{
-			[$filesystem, $size, $used, $avail, $usedPercentage, $mountPoint] = preg_split('/\s+/', trim($line));
+			[$filesystem, $size, $used, $avail, $used_percentage, $mountpoint] = preg_split('/\s+/', trim($line));
 
 			$disk = new DiskDTO(
 				$filesystem, $size,
-				$mountPoint, $used,
-				(float)rtrim($usedPercentage, '%')
+				$mountpoint, $used,
+				(float)rtrim($used_percentage, '%')
 			);
 
 			$disks[] = $disk;

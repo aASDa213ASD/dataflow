@@ -8,15 +8,15 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class ConfigService
 {
-	private string $operatingSystem;
+	private string $operating_system;
 
 	public function __construct(ParameterBagInterface $params)
 	{
-		$this->operatingSystem = $params->get('app.operating_system');
+		$this->operating_system = $params->get('app.operating_system');
 	}
 
 	public function getOperatingSystem(): string
 	{
-		return $this->operatingSystem;
+		return $this->operating_system;
 	}
 }

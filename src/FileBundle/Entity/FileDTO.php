@@ -10,15 +10,15 @@ class FileDTO
 	private string $name;
 	private string $path;
 	private int $size;
-	private int $modificationTime;
+	private int $modification_time;
 	private string $type;
 
-	public function __construct(string $name, string $path, int $size, int $modificationTime, string $type)
+	public function __construct(string $name, string $path, int $size, int $modification_time, string $type)
 	{
 		$this->name = $name;
 		$this->path = $path;
 		$this->size = $size;
-		$this->modificationTime = $modificationTime;
+		$this->modification_time = $modification_time;
 		$this->type = $type;
 	}
 
@@ -37,7 +37,7 @@ class FileDTO
 		return $this->size;
 	}
 
-	public function getFormattedSize(): string
+	public function getSizeFormatted(): string
 	{
 		if ($this->size < 1024)
 		{
@@ -55,18 +55,17 @@ class FileDTO
 
 	public function getModificationTime(): int
 	{
-		return $this->modificationTime;
+		return $this->modification_time;
 	}
 
-	public function getFormattedModificationTime(): string
+	public function getModificationTimeFormatted(): string
 	{
-		return date("d M Y - H:i A", $this->modificationTime);
+		return date("d M Y - H:i A", $this->modification_time);
 	}
 
 	public function getType(): string
 	{
 		return $this->type;
 	}
-
 }
 

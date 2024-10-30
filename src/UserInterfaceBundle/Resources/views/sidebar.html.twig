@@ -1,5 +1,4 @@
-<!-- Sidebar -->
-<aside class="w-44 bg-zinc-900 rounded-lg text-[14px] h-full overflow-y-auto">
+<aside class="w-44 bg-zinc-900 rounded-l-lg text-[14px] min-h-full overflow-y-auto">
     <ul class="my-5">
         {% for disk in disks %}
             <a href="{{ path('files', { 'disk_name': disk.getName(true) }) }}" class="p-2 hover:bg-zinc-800/50 cursor-pointer flex flex-col">
