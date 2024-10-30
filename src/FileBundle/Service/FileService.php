@@ -10,7 +10,7 @@ use App\FileBundle\Entity\FileDTO;
 
 class FileService
 {
-	private ConfigService $configService;
+	private ConfigService $config;
 
 	public function __construct(ConfigService $config)
 	{
@@ -43,9 +43,17 @@ class FileService
 				continue;
 			}
 
-			$size = is_dir($path) ? 0 : filesize($path);
+			$isDirectory = is_dir($path);
+			$size = $isDirectory ? 0 : filesize($path);
 			$modificationTime = filemtime($path);
-			$files[] = new FileDTO($item, $path, $size, $modificationTime);
+			$extension = !$isDirectory ? pathinfo($item, PATHINFO_EXTENSION) : null;
+
+			$type = 'directory';
+			if (!$isDirectory) {
+				$type = $extension ? 'file_with_extension' : 'file_without_extension';
+			}
+
+			$files[] = new FileDTO($item, $path, $size, $modificationTime, $type);
 		}
 
 		return $files;

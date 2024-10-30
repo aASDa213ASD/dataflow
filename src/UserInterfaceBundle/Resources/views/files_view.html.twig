@@ -21,7 +21,13 @@
     {% for file in files %}
         <div class="p-1 text-[12px] hover:bg-zinc-700/40 cursor-pointer flex flex-col">
             <div class="flex items-center">
-                <i class="nf nf-cod-file me-1 text-white"></i>
+                {% if file.getType() == 'directory' %}
+                    <i class="nf nf-cod-folder me-1 text-yellow-200"></i>
+                {% elseif file.getType() == 'file_with_extension' %}
+                    <i class="nf nf-cod-file me-1 text-white"></i>
+                {% elseif file.getType() == 'file_without_extension' %}
+                    <i class="nf nf-cod-file me-1 text-white"></i> 
+                {% endif %}
                 <span class="text-white">{{ file.getName() }}</span>
             </div>
         </div>

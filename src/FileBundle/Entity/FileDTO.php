@@ -11,13 +11,15 @@ class FileDTO
 	private string $path;
 	private int $size;
 	private int $modificationTime;
+	private string $type;
 
-	public function __construct(string $name, string $path, int $size, int $modificationTime)
+	public function __construct(string $name, string $path, int $size, int $modificationTime, string $type)
 	{
 		$this->name = $name;
 		$this->path = $path;
 		$this->size = $size;
 		$this->modificationTime = $modificationTime;
+		$this->type = $type;
 	}
 
 	public function getName(): string
@@ -60,4 +62,11 @@ class FileDTO
 	{
 		return date("d M Y - H:i A", $this->modificationTime);
 	}
+
+	public function getType(): string
+    {
+        return $this->type;
+    }
+
 }
+
