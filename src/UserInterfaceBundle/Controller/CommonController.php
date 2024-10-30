@@ -49,7 +49,7 @@ class CommonController extends AbstractController
 		]);
 	}
 
-	#[Route('/dataflow/settings', name: 'settings')]
+	#[Route('/settings', name: 'settings', priority: 1)]
 	public function settings(): Response
 	{
 		$disks = $this->disk_service->getAvailableDisks();

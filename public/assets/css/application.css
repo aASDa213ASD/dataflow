@@ -1,11 +1,19 @@
-@font-face {
-    font-family: "Nunito";
-    src: url("../fonts/nunito/Nunito-VariableFont_wght.ttf") format("truetype");
+@font-face
+{
+    font-family: "ProductSans";
+    src: url("../fonts/productsans/Product-Sans-Regular.ttf") format("truetype");
 }
+
+@font-face
+{
+    font-family: "ProductSansMono";
+    src: url("../fonts/productsansmono/Product-Sans-Mono-Regular.ttf") format("truetype");
+}
+
 
 body
 {
-    font-family: "Nunito";
+    font-family: "ProductSans";
 }
 
 .color-tester
