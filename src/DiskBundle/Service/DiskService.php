@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\DiskBundle\Service;
 
-use App\AppBundle\Service\ConfigService;
 use App\DiskBundle\Entity\DiskDTO;
+use App\AppBundle\Helper\BytesReader;
+use App\AppBundle\Service\ConfigService;
 use RuntimeException;
 
 class DiskService
@@ -30,7 +31,7 @@ class DiskService
 	private function getLinuxDisks(): array
 	{
 		$disks = [];
-		$output = shell_exec("df -h --output=source,size,used,avail,pcent,target | grep '^/dev'");
+		$output = shell_exec("df -h --block-size=1 --output=source,size,used,avail,pcent,target | grep '^/dev'");
 		$lines = array_filter(explode(PHP_EOL, trim($output)), fn($line) => !empty(trim($line)));
 
 		foreach ($lines as $line)
@@ -38,8 +39,8 @@ class DiskService
 			[$filesystem, $size, $used, $avail, $used_percentage, $mountpoint] = preg_split('/\s+/', trim($line));
 
 			$disk = new DiskDTO(
-				$filesystem, $size,
-				$mountpoint, $used,
+				$filesystem, $mountpoint,
+				(int)$size, (int)$used,
 				(float)rtrim($used_percentage, '%')
 			);
 
@@ -76,8 +77,8 @@ class DiskService
 			$used_percentage = $total_bytes > 0 ? ($used_bytes / $total_bytes) * 100 : 0;
 
 			$disk = new DiskDTO(
-				$drive, $this->bytesToReadableSize($total_bytes),
-				$drive, $this->bytesToReadableSize($used_bytes),
+				$drive, $drive,
+				$total_bytes, $used_bytes,
 				round($used_percentage, 2)
 			);
 
@@ -120,19 +121,5 @@ class DiskService
 		}
 
 		return null;
-	}
-
-	private function bytesToReadableSize(int $bytes): string
-	{
-		$units = ['B', 'KB', 'M', 'G', 'T'];
-		$unitIndex = 0;
-
-		while ($bytes >= 1024 && $unitIndex < count($units) - 1)
-		{
-			$bytes /= 1024;
-			$unitIndex++;
-		}
-
-		return round($bytes, 2) . ' ' . $units[$unitIndex];
 	}
 }

@@ -8,6 +8,7 @@ use App\DiskBundle\Service\DiskService;
 use App\FileBundle\Service\FileService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -32,8 +33,8 @@ class CommonController extends AbstractController
 		]);
 	}
 
-	#[Route('/{disk_name}', name: 'files')]
-	public function files(string $disk_name): Response
+	#[Route('/{disk_name}{path}', name: 'files', requirements: ['path' => '.+'])]
+	public function files(Request $request, string $disk_name, string $path = ''): Response
 	{
 		$disks = $this->disk_service->getAvailableDisks();
 
@@ -44,11 +45,13 @@ class CommonController extends AbstractController
 			return $this->redirectToRoute('disk_selection');
 		}
 
-		$files = $this->file_service->getFilesFromDisk($disk);
+		$files = $this->file_service->getFilesFromDisk($disk, $path);
 
 		return $this->render('@UserInterface/files_view.html.twig', [
 			'disks' => $disks,
+			'disk' => $disk,
 			'files' => $files,
+			'path' => $path,
 		]);
 	}
 

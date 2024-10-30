@@ -15,7 +15,7 @@
                         <i class="nf nf-md-harddisk text-indigo-200 text-2xl mr-2"></i>
                         <span class="text-white font-medium">{{ disk.getName() }}</span>
                     </div>
-                    <div class="text-gray-300 text-sm">Size: {{ disk.getSize() }}</div>
+                    <div class="text-gray-300 text-sm">Size: {{ bytesToReadableSize(disk.getSize()) }}</div>
                     <div class="text-gray-300 text-sm mb-2">Mountpoint: {{ disk.getMountpoint() }}</div>
                     <div class="text-right text-gray-300 text-xs mt-1">{{ disk.getUsedPercentage() }} used</div>
                     <div class="w-full bg-gray-600 h-2 overflow-hidden">

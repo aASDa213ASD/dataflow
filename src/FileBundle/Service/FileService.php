@@ -17,9 +17,9 @@ class FileService
 		$this->config = $config;
 	}
 
-	public function getFilesFromDisk(DiskDTO $disk): array
+	public function getFilesFromDisk(DiskDTO $disk, string $folder_path = ''): array
 	{
-		$mountpoint = $disk->getMountpoint();
+		$mountpoint = $disk->getMountpoint() . DIRECTORY_SEPARATOR . trim($folder_path, '/');
 
 		if (!is_dir($mountpoint))
 		{
@@ -32,7 +32,7 @@ class FileService
 		foreach ($items as $item)
 		{
 			$path = $mountpoint . DIRECTORY_SEPARATOR . $item;
-			
+
 			if ($item === '.' || $item === '..')
 			{
 				continue;
@@ -43,11 +43,24 @@ class FileService
 				continue;
 			}
 
-			$is_directory = is_dir($path);
-			$size = $is_directory ? 0 : filesize($path);
+			$type = 'Folder';
+
+			if (!is_dir($path))
+			{
+				try
+				{
+					$type = ucfirst(pathinfo($item, PATHINFO_EXTENSION)); // Get file type from extension
+				}
+				catch (\Exception $e)
+				{
+					$type = 'Unknown';
+				}
+			}
+
+			$size = filesize($path);
 			$modificationTime = filemtime($path);
-			
-			$files[] = new FileDTO($item, $path, $size, $modificationTime, $is_directory);
+
+			$files[] = new FileDTO($path, $item, $type, $size, $modificationTime);
 		}
 
 		return $files;

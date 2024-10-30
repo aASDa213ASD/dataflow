@@ -9,7 +9,8 @@
 {% block body %}
     <div class="flex">
         <div class="text-zinc-500 text-[16px] p-1">
-            <span>{{ app.request.pathInfo }}</span>
+            <span>{{ disk.getMountPoint() }}</span>
+            <p>Path: {{ path ? path : disk.getMountPoint() }}</p>
         </div>
         <div class="relative mb-4 ms-auto text-[15px]">
             <!--
@@ -25,17 +26,35 @@
         </div>
     </div>
 
-    {% for file in files %}
-        <div class="p-1 text-[12px] hover:bg-zinc-700/40 cursor-pointer flex flex-col">
-            <div class="flex items-center">
-                {% if file.isDirectory %} 
-                    <i class="nf nf-cod-folder me-1 text-yellow-200"></i>
-                    <span class="text-white">{{ file.getName() }}</span>
-                {% else %}
-                    <i class="nf nf-cod-file me-1 text-white"></i>
-                    <span class="text-white">{{ file.getName() }}</span>
-                {% endif %}
-            </div>
-        </div>
-    {% endfor %}
+    <table class="table-fixed w-full text-left text-[14px]">
+        <thead>
+        <tr class="text-zinc-500">
+            <th class="w-1/4">Name</th>
+            <th class="w-1/4">Size</th>
+            <th class="w-1/4">Type</th>
+            <th class="w-1/4">Date Modified</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for file in files %}
+            <tr class="text-slate-200 hover:bg-zinc-800 cursor-pointer">
+                <td class="w-1/4 py-1">
+                    {% if file.getType() == 'Folder' %}
+                        <i class="nf nf-md-folder mx-2 mb-1 text-yellow-200"></i>
+                    {% else %}
+                        <i class="nf nf-md-file mx-2 mb-1 text-slate-300"></i>
+                    {% endif %}
+
+                    <a href="{{ path('files', { disk_name: disk.getName(true), path: disk.getMountPoint() ~ '/' ~ file.getName() }) }}">
+                        <span class="hover:underline">{{ file.getName() }}</span>
+                    </a>
+                </td>
+                <td class="w-1/4">{{ bytesToReadableSize(file.getSize()) }}</td>
+                <td class="w-1/4">{{ file.getType() }}</td>
+                <td class="w-1/4">{{ file.getModificationTimeFormatted() }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
 {% endblock %}
