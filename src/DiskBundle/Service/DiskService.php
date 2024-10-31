@@ -59,27 +59,23 @@ class DiskService
 		foreach ($drive_letters as $drive)
 		{
 			$diskInfo = shell_exec("fsutil volume diskfree {$drive}");
-
+			
 			if (!$diskInfo)
 			{
 				continue;
 			}
 
-			preg_match_all('/\d+/', $diskInfo, $matches);
-			if (count($matches[0]) < 2)
-			{
-				continue;
-			}
-
-			$total_bytes = (int)$matches[0][1];
-			$free_bytes = (int)$matches[0][0];
+			preg_match_all('/([\d,]+)\s?\ \(/', $diskInfo, $matches);
+		
+			$free_bytes = (int)str_replace(',', '', $matches[0][0]);
+			$total_bytes = (int)str_replace(',', '', $matches[0][1]);
 			$used_bytes = $total_bytes - $free_bytes;
 			$used_percentage = $total_bytes > 0 ? ($used_bytes / $total_bytes) * 100 : 0;
 
 			$disk = new DiskDTO(
 				$drive, $drive,
 				$total_bytes, $used_bytes,
-				round($used_percentage, 2)
+				round($used_percentage)
 			);
 
 			$disks[] = $disk;

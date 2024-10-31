@@ -63,4 +63,30 @@ class FileService
 
 		return $files;
 	}
+
+	public function generatePathHistory(string $path): array
+	{
+		$parts = explode(DIRECTORY_SEPARATOR, $path);
+		$accumulatedPath = array_shift($parts) . DIRECTORY_SEPARATOR;
+		$history[] = [
+			'path' => $accumulatedPath,
+			'name' => $accumulatedPath
+		];
+
+		foreach ($parts as $part)
+		{
+			if ($part == '')
+			{
+				continue;
+			}
+			
+			$accumulatedPath .= $part . DIRECTORY_SEPARATOR;
+			$history[] = [
+				'path' => rtrim($accumulatedPath, DIRECTORY_SEPARATOR),
+				'name' => $part
+			];
+		}
+	
+		return $history;
+	}
 }

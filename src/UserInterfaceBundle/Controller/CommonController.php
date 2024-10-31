@@ -33,19 +33,20 @@ class CommonController extends AbstractController
 		]);
 	}
 
-	#[Route('/{disk_name}{path}', name: 'files', requirements: ['path' => '.+'])]
+	#[Route('/{disk_name}/{path}', name: 'files', requirements: ['path' => '.+'])]
 	public function files(Request $request, string $disk_name, string $path): Response
 	{
 		$disks = $this->disk_service->getAvailableDisks(); // TODO: Get disk by name from $disks variable instead
 		$disk = $this->disk_service->getDiskByName($disk_name);
-
 		$files = $this->file_service->getFilesFromDisk($path);
-
+		$history = $this->file_service->generatePathHistory($path);
+		
 		return $this->render('@UserInterface/files_view.html.twig', [
 			'disks' => $disks,
-			'disk' => $disk,
+			'disk'  => $disk,
 			'files' => $files,
-			'path' => $path,
+			'path'  => $path,
+			'history'=> $history,
 		]);
 	}
 

@@ -8,8 +8,8 @@
 
 {% block body %}
     <div class="flex">
-        <div class="text-zinc-500 font-bold text-[16px] p-1 hover:underline cursor-pointer">
-            <span>{{ path }}</span>
+        <div class="text-zinc-500 font-bold text-[16px] p-1">
+            {% for reference in history %}<a href="{{ path('files', { disk_name: disk.getName(true), path: attribute(reference, 'path') }) }}" class="hover:underline cursor-pointer">{{attribute(reference, 'name')}}{{ not ends_with(attribute(reference, 'name'), directory_separator()) ? directory_separator()}}</a>{% endfor %}
         </div>
         <div class="relative mb-4 ms-auto text-[15px]">
             <!--
@@ -28,7 +28,7 @@
     <table class="table-auto w-full text-left text-[14px] overflow-hidden whitespace-nowrap text-ellipsis">
         <thead>
         <tr class="text-zinc-500">
-            <th class="w-1/2">Name</th>
+            <th class="w-1/2">Name {{ directory_separator() }}</th>
             <th class="w-1/4">Size</th>
             <th class="w-1/4">Type</th>
             <th class="w-1/4">Date Modified</th>
@@ -45,7 +45,7 @@
                     {% endif %}
 
                     {% if file.getType() == 'Folder' %}
-                        <a href="{{ path('files', { disk_name: disk.getName(true), path: path != '/' ? path ~ '/' ~ file.getName() : path ~ file.getName() }) }}">
+                        <a href="{{ path('files', { disk_name: disk.getName(true), path: not ends_with(path, directory_separator()) ? path ~ directory_separator() ~ file.getName() : path ~ file.getName() }) }}">
                             <span class="hover:underline">{{ file.getName() }}</span>
                         </a>
                     {% else %}
