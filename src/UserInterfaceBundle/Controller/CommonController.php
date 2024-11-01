@@ -43,7 +43,7 @@ class CommonController extends AbstractController
 	}
 
 	#[Route('/dev', name: 'files')]
-	public function getFilesTable(Request $request)
+	public function getFilesTable(Request $request): Response
 	{
 		$path = $request->query->get('path');
 		$files = $this->file_service->getFiles($path);

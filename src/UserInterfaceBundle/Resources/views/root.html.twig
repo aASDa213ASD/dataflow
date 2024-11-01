@@ -3,12 +3,12 @@
 {% block title %} Dataflow - files {% endblock %}
 
 {% block sidebar %}
-    {% include "@UserInterface/_disks_sidebar.html.twig" %}
+    {% include "@UserInterface/disks_sidebar.html.twig" %}
 {% endblock %}
 
 {% block body %}
-    <div class="flex">
-        <div class="text-zinc-500 font-bold text-[16px] p-1">
+    <div id="header-window" class="flex">
+        <div id="header-text" class="text-zinc-500 font-bold text-[16px] p-1">
         </div>
         <div class="relative mb-4 ms-auto text-[15px]">
             <!--
@@ -30,7 +30,7 @@
     <script>
 		document.addEventListener('DOMContentLoaded', () =>
         {
-	        loadContent('/disks');
+	        loadContent('/disks', '#root-window');
 		});
     </script>
 {% endblock %}

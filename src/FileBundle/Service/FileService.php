@@ -41,18 +41,20 @@ class FileService
 				continue;
 			}
 
-			$type = 'Folder';
-
 			if (!is_dir($file_path))
 			{
 				try
 				{
-					$type = ucfirst(pathinfo($item, PATHINFO_EXTENSION)); // Get file type from extension
+					$type = ucfirst(pathinfo($item, PATHINFO_EXTENSION));
 				}
 				catch (\Exception $e)
 				{
 					$type = 'Unknown';
 				}
+			}
+			else
+			{
+				$type = 'Folder';
 			}
 
 			$size = filesize($file_path);
