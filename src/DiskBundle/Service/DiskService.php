@@ -62,14 +62,14 @@ class DiskService
 		foreach ($drive_letters as $drive)
 		{
 			$diskInfo = shell_exec("fsutil volume diskfree {$drive}");
-			
+
 			if (!$diskInfo)
 			{
 				continue;
 			}
 
 			preg_match_all('/([\d,]+)\s?\ \(/', $diskInfo, $matches);
-		
+
 			$free_bytes = (int)str_replace(',', '', $matches[0][0]);
 			$total_bytes = (int)str_replace(',', '', $matches[0][1]);
 			$used_bytes = $total_bytes - $free_bytes;
@@ -85,40 +85,5 @@ class DiskService
 		}
 
 		return $disks;
-	}
-
-	public function getDiskByName(string $name): ?DiskDTO
-	{
-		$disks = $this->getAvailableDisks();
-
-		if ($this->config->getOperatingSystem() === 'linux')
-		{
-			$name = "/dev/{$name}";
-		}
-
-		foreach ($disks as $disk)
-		{
-			if ($disk->getName() === $name)
-			{
-				return $disk;
-			}
-		}
-
-		return null;
-	}
-
-	public function getDiskByMountPoint(string $mount_point): ?DiskDTO
-	{
-		$disks = $this->getAvailableDisks();
-
-		foreach ($disks as $disk)
-		{
-			if ($disk->getMountpoint() === $mount_point)
-			{
-				return $disk;
-			}
-		}
-
-		return null;
 	}
 }

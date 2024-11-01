@@ -7,7 +7,6 @@ namespace App\UserInterfaceBundle\Controller;
 use App\DiskBundle\Service\DiskService;
 use App\FileBundle\Service\FileService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,30 +22,46 @@ class CommonController extends AbstractController
 		$this->file_service = $file_service;
 	}
 
-	#[Route('/', name: 'disk_selection')]
-	public function disks(): Response
+	#[Route('/', name: 'root')]
+	public function root(): Response
 	{
 		$disks = $this->disk_service->getAvailableDisks();
 
-		return $this->render('@UserInterface/disk_selection.html.twig', [
+		return $this->render('@UserInterface/root.html.twig', [
 			'disks' => $disks,
 		]);
 	}
 
-	#[Route('/{disk_name}/{path}', name: 'files', requirements: ['path' => '.+'])]
-	public function files(Request $request, string $disk_name, string $path): Response
+	#[Route('/disks', name: 'disks')]
+	public function getDisksSelector(Request $request): Response
 	{
-		$disks = $this->disk_service->getAvailableDisks(); // TODO: Get disk by name from $disks variable instead
-		$disk = $this->disk_service->getDiskByName($disk_name);
-		$files = $this->file_service->getFilesFromDisk($path);
-		$history = $this->file_service->generatePathHistory($path);
-		
-		return $this->render('@UserInterface/files_view.html.twig', [
+		$disks = $this->disk_service->getAvailableDisks();
+
+		return $this->render('@UserInterface/_disks_selection.html.twig', [
 			'disks' => $disks,
-			'disk'  => $disk,
+		]);
+	}
+
+	#[Route('/dev', name: 'files')]
+	public function getFilesTable(Request $request)
+	{
+		$path = $request->query->get('path');
+		$files = $this->file_service->getFiles($path);
+
+		return $this->render('@UserInterface/_files_table.html.twig', [
 			'files' => $files,
 			'path'  => $path,
-			'history'=> $history,
+		]);
+	}
+
+	#[Route('/history', name:'history')]
+	public function getFileHistoryBreadcrumb(Request $request): Response
+	{
+		$path = $request->query->get('path');
+		$history = $this->file_service->generatePathHistory($path);
+
+		return $this->render('@UserInterface/_history.html.twig', [
+			'history' => $history,
 		]);
 	}
 

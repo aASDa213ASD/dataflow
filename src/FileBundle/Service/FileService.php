@@ -17,7 +17,7 @@ class FileService
 		$this->config = $config;
 	}
 
-	public function getFilesFromDisk(string $path): array
+	public function getFiles(string $path): array
 	{
 		if (!is_dir($path))
 		{

@@ -1,0 +1,104 @@
+<aside id="disk-sidebar" class="w-8 bg-zinc-900 rounded-l-lg text-[14px] min-h-full overflow-y-auto overflow-x-hidden transition-all duration-300">
+    <ul class="mt-[20px]">
+        <div class="mb-3">
+            <a id="toggle-sidebar" class="mx-2 text-zinc-500 hover:text-zinc-300 cursor-pointer transition duration-200 ease-in-out">
+                <i class="nf nf-fa-exchange mb-1"></i><a href="{{ path('disks') }}" class="py-5 m-0 text-zinc-500 hover:text-zinc-300 cursor-pointer transition duration-200 ease-in-out text-collapse-by-display" async="true">Disks</a>
+            </a>
+        </div>
+
+        {% for disk in disks %}
+            <a href="{{ path('files', { 'path': disk.getMountPoint() }) }}" class="p-2 hover:bg-zinc-800/50 cursor-pointer flex flex-col" async="true">
+                <div class="flex items-center">
+                    <i class="nf nf-md-harddisk text-indigo-200 me-1"></i>
+                    <span class="text-white">
+                        <span class="text-collapse-by-opacity">{{ disk.getMountpoint() }}</span>
+                        <span class="text-zinc-500 text-collapse-by-display">{{ bytesToReadableSize(disk.getSize()) }}</span>
+                    </span>
+                </div>
+                <div class="w-full bg-gray-700 h-1 mt-1">
+                    <div class="bg-indigo-200 h-full" style="width: {{ disk.getUsedPercentage() }};"></div>
+                </div>
+            </a>
+        {% endfor %}
+    </ul>
+</aside>
+
+<script>
+	function setCookie(name, value, days)
+	{
+		const expires = new Date(Date.now() + days * 864e5).toUTCString();
+		document.cookie = name + '=' + encodeURIComponent(value) + '; expires=' + expires + '; path=/';
+	}
+
+	function getCookie(name)
+	{
+		return document.cookie.split('; ').reduce((r, c) => {
+			const [key, ...v] = c.split('=');
+			return key === name ? decodeURIComponent(v.join('=')) : r;
+		}, '');
+	}
+
+	function collapseDiskSelectionDock(is_collapsed)
+	{
+		console.log("Called 'collapseDiskSelectionDock' with is_collapsed = " + is_collapsed);
+		const sidebar = document.getElementById('disk-sidebar');
+		const sidebar_original_width = 'w-44';
+		const sidebar_collapsed_width = 'w-7';
+
+		if (!is_collapsed)
+		{
+			sidebar.classList.remove(sidebar_collapsed_width);
+			sidebar.classList.add(sidebar_original_width);
+
+			const disk_size = sidebar.querySelectorAll('.text-collapse-by-display');
+			disk_size.forEach(text =>
+			{
+				setTimeout(() =>
+				{
+					text.style.display = 'inline';
+				}, 150);
+			});
+
+			const disk_mountpoint = sidebar.querySelectorAll('.text-collapse-by-opacity');
+			disk_mountpoint.forEach(text =>
+			{
+				setTimeout(() =>
+				{
+					text.style.opacity = '1';
+				}, 150);
+			});
+		}
+		else
+		{
+			sidebar.classList.remove(sidebar_original_width);
+			sidebar.classList.add(sidebar_collapsed_width);
+
+			const disk_size = sidebar.querySelectorAll('.text-collapse-by-display');
+			disk_size.forEach(text =>
+			{
+				text.style.display = 'none';
+			});
+
+			const disk_mountpoint = sidebar.querySelectorAll('.text-collapse-by-opacity');
+			disk_mountpoint.forEach(text =>
+			{
+				text.style.opacity = '0';
+			});
+		}
+	}
+
+	document.addEventListener('DOMContentLoaded', () =>
+	{
+		const collapse_button = document.getElementById('toggle-sidebar');
+		let is_collapsed = getCookie('disk_selection_dock_collapsed') === 'true'; // Read cookie value
+
+        collapseDiskSelectionDock(is_collapsed); // Collapse the dock if needed
+
+		collapse_button.addEventListener('click', () =>
+		{
+			is_collapsed = !is_collapsed;
+			collapseDiskSelectionDock(is_collapsed);
+			setCookie('disk_selection_dock_collapsed', is_collapsed, 365);
+		});
+	});
+</script>

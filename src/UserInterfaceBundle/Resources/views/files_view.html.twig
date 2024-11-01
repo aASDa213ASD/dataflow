@@ -9,7 +9,7 @@
 {% block body %}
     <div class="flex">
         <div class="text-zinc-500 font-bold text-[16px] p-1">
-            {% for reference in history %}<a href="{{ path('files', { disk_name: disk.getName(true), path: attribute(reference, 'path') }) }}" class="hover:underline cursor-pointer">{{attribute(reference, 'name')}}{{ not ends_with(attribute(reference, 'name'), directory_separator()) ? directory_separator()}}</a>{% endfor %}
+            {% for reference in history %}<a href="{{ path('files', { mountpoint: disk.getMountPoint() }) }}" class="hover:underline cursor-pointer">{{attribute(reference, 'name')}}{{ not ends_with(attribute(reference, 'name'), directory_separator()) ? directory_separator()}}</a>{% endfor %}
         </div>
         <div class="relative mb-4 ms-auto text-[15px]">
             <!--
@@ -25,39 +25,68 @@
         </div>
     </div>
 
-    <table class="table-auto w-full text-left text-[14px] overflow-hidden whitespace-nowrap text-ellipsis">
-        <thead>
-        <tr class="text-zinc-500">
-            <th class="w-1/2">Name {{ directory_separator() }}</th>
-            <th class="w-1/4">Size</th>
-            <th class="w-1/4">Type</th>
-            <th class="w-1/4">Date Modified</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for file in files %}
-            <tr class="text-slate-200 hover:bg-zinc-800 cursor-pointer">
-                <td class="w-1/4 py-1">
-                    {% if file.getType() == 'Folder' %}
-                        <i class="nf nf-custom-folder px-1 mb-1 text-amber-100"></i>
-                    {% else %}
-                        <i class="nf nf-md-file px-1 mb-1 text-slate-400"></i>
-                    {% endif %}
-
-                    {% if file.getType() == 'Folder' %}
-                        <a href="{{ path('files', { disk_name: disk.getName(true), path: not ends_with(path, directory_separator()) ? path ~ directory_separator() ~ file.getName() : path ~ file.getName() }) }}">
-                            <span class="hover:underline">{{ file.getName() }}</span>
-                        </a>
-                    {% else %}
-                        <span class="hover:underline">{{ file.getName() }}</span>
-                    {% endif %}
-                </td>
-                <td class="w-1/4">{{ bytesToReadableSize(file.getSize()) }}</td>
-                <td class="w-1/4">{{ file.getType() }}</td>
-                <td class="w-1/4">{{ file.getModificationTimeFormatted() }}</td>
+    <div id="files-table">
+        <table class="table-auto w-full text-left text-[14px] overflow-hidden whitespace-nowrap text-ellipsis">
+            <thead>
+            <tr class="text-zinc-500">
+                <th class="w-1/2">Name {{ directory_separator() }}</th>
+                <th class="w-1/4">Size</th>
+                <th class="w-1/4">Type</th>
+                <th class="w-1/4">Date Modified</th>
             </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for file in files %}
+                    <tr class="text-slate-200 hover:bg-zinc-800 cursor-pointer">
+                        <td class="w-1/4 py-1">
+                            {% if file.getType() == 'Folder' %}
+                                <i class="nf nf-custom-folder px-1 mb-1 text-amber-100"></i>
+                            {% else %}
+                                <i class="nf nf-md-file px-1 mb-1 text-slate-400"></i>
+                            {% endif %}
 
+                            {% if file.getType() == 'Folder' %}
+                                <!--
+                                <a href="{{ path('files', { 'mountpoint': disk.getMountPoint(), path: not ends_with(path, directory_separator()) ? path ~ directory_separator() ~ file.getName() : path ~ file.getName() }) }}">
+                                    <span class="hover:underline">{{ file.getName() }}</span>
+                                </a>
+                                -->
+                                <a class="file-link" data-mountpoint="{{ disk.getMountPoint() }}" data-path="{{ path ~ directory_separator() ~ file.getName() }}">
+                                    <span class="hover:underline">{{ file.getName() }}</span>
+                                </a>
+                            {% else %}
+                                <span class="hover:underline">{{ file.getName() }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="w-1/4">{{ bytesToReadableSize(file.getSize()) }}</td>
+                        <td class="w-1/4">{{ file.getType() }}</td>
+                        <td class="w-1/4">{{ file.getModificationTimeFormatted() }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+	    document.addEventListener('DOMContentLoaded', () => {
+		    loadContent('/disks');
+
+		    document.querySelectorAll('a[async]').forEach(link => {
+			    link.addEventListener('click', (event) => {
+				    event.preventDefault();
+				    const url = link.getAttribute('href');
+
+				    // Gather all data- attributes into a query string
+				    const dataAttributes = Array.from(link.dataset); // Get all data attributes
+				    const queryParams = dataAttributes.map(attr => `${attr}=${encodeURIComponent(link.dataset[attr])}`).join('&');
+
+				    // Construct the full URL
+				    const fullUrl = `${url}?${queryParams}`;
+
+				    // Load the content
+				    loadContent(fullUrl);
+			    });
+		    });
+	    });
+    </script>
 {% endblock %}
