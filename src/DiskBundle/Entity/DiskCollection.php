@@ -2,13 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\DiskBundle\Collection;
+namespace App\DiskBundle\Entity;
 
-use App\DiskBundle\Entity\DiskDTO;
-use Countable;
 use ArrayIterator;
+use Countable;
 use IteratorAggregate;
-
 
 class DiskCollection implements IteratorAggregate, Countable
 {
@@ -47,5 +45,3 @@ class DiskCollection implements IteratorAggregate, Countable
 		return new ArrayIterator($this->disks);
 	}
 }
-
-?>

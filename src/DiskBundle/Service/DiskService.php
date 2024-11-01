@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\DiskBundle\Service;
 
-use App\DiskBundle\Entity\DiskDTO;
 use App\AppBundle\Helper\BytesReader;
 use App\AppBundle\Service\ConfigService;
-use App\DiskBundle\Collection\DiskCollection;
+use App\DiskBundle\Entity\DiskCollection;
+use App\DiskBundle\Entity\DiskDTO;
 use RuntimeException;
 
 class DiskService

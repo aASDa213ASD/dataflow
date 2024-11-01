@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\DiskBundle\Entity;
 
-
 class DiskDTO
 {
 	private string $name;
