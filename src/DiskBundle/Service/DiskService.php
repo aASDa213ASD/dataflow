@@ -7,6 +7,7 @@ namespace App\DiskBundle\Service;
 use App\DiskBundle\Entity\DiskDTO;
 use App\AppBundle\Helper\BytesReader;
 use App\AppBundle\Service\ConfigService;
+use App\DiskBundle\Collection\DiskCollection;
 use RuntimeException;
 
 class DiskService
@@ -18,14 +19,16 @@ class DiskService
 		$this->config = $config;
 	}
 
-	public function getAvailableDisks(): array
+	public function getAvailableDisks(): DiskCollection
 	{
-		return match ($this->config->getOperatingSystem())
+		$disks = match ($this->config->getOperatingSystem())
 		{
 			'linux' => $this->getLinuxDisks(),
 			'windows' => $this->getWindowsDisks(),
 			default => throw new RuntimeException("Unsupported operating system."),
 		};
+
+		return new DiskCollection($disks);
 	}
 
 	private function getLinuxDisks(): array
