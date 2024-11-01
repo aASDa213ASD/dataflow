@@ -16,11 +16,7 @@ async function loadContent(url, object_identifier)
 		if (response.ok)
 		{
 			const content = await response.text();
-
-			if (path)
-			{
-				await updateBreadcrumbHistory(path);
-			}
+			await updateBreadcrumbHistory(path);
 
 			root_window.innerHTML = content;
 			hookHrefs(object_identifier);
@@ -38,6 +34,14 @@ async function loadContent(url, object_identifier)
 
 async function updateBreadcrumbHistory(path)
 {
+	const header_text = document.querySelector('#header-text');
+
+	if (!path)
+	{
+		header_text.innerHTML = '';
+		return;
+	}
+
 	try
 	{
 		const response = await fetch(`/history?path=${encodeURIComponent(path)}`, {
@@ -47,7 +51,7 @@ async function updateBreadcrumbHistory(path)
 		if (response.ok)
 		{
 			const breadcrumbHTML = await response.text();
-			document.querySelector('#header-text').innerHTML = breadcrumbHTML;
+			header_text.innerHTML = breadcrumbHTML;
 		}
 		else
 		{
