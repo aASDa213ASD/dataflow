@@ -1,22 +1,22 @@
-<aside id="disk-sidebar" class="w-8 bg-zinc-900 rounded-l-lg text-[14px] min-h-full overflow-y-auto overflow-x-hidden transition-all duration-300">
+<aside id="disk-sidebar" class="w-8 bg-dataflowSecondary rounded-l-lg text-[14px] min-h-full overflow-y-auto overflow-x-hidden transition-all duration-300">
     <ul class="mt-[20px]">
         <div class="mb-3">
-            <a id="toggle-sidebar" class="mx-2 text-zinc-500 hover:text-zinc-300 cursor-pointer transition duration-200 ease-in-out">
-                <i class="nf nf-fa-exchange mb-1"></i><a href="{{ path('disks') }}" class="py-5 m-0 text-zinc-500 hover:text-zinc-300 cursor-pointer transition duration-200 ease-in-out text-collapse-by-display" async="true">Disks</a>
+            <a id="toggle-sidebar" class="mx-2 text-dataflowTextSecondary hover:text-white/80 cursor-pointer transition duration-200 ease-in-out">
+                <i class="nf nf-fa-exchange mb-1"></i><a href="{{ path('disks') }}" class="py-5 m-0 text-dataflowTextSecondary hover:text-white/80 cursor-pointer transition duration-200 ease-in-out text-collapse-by-display" async="true">Disks</a>
             </a>
         </div>
 
         {% for disk in disks %}
-            <a href="{{ path('files', { 'path': disk.getMountPoint() }) }}" class="p-2 hover:bg-zinc-800/50 cursor-pointer flex flex-col" async="true">
+            <a href="{{ path('files', { 'path': disk.getMountPoint() }) }}" class="p-2 hover:bg-white/10 cursor-pointer flex flex-col" async="true">
                 <div class="flex items-center">
-                    <i class="nf nf-md-harddisk text-indigo-200 me-1"></i>
-                    <span class="text-white">
-                        <span class="text-collapse-by-opacity">{{ disk.getMountpoint() }}</span>
-                        <span class="text-zinc-500 text-collapse-by-display">{{ bytesToReadableSize(disk.getSize()) }}</span>
+                    <i class="nf nf-md-harddisk text-dataflowText me-1"></i>
+                    <span class="text-dataflowText">
+                        <span class="text-dataflowText text-collapse-by-opacity">{{ disk.getMountpoint() }}</span>
+                        <span class="text-dataflowTextSecondary text-collapse-by-display">{{ bytesToReadableSize(disk.getSize()) }}</span>
                     </span>
                 </div>
-                <div class="w-full bg-gray-700 h-1 mt-1">
-                    <div class="bg-indigo-200 h-full" style="width: {{ disk.getUsedPercentage() }};"></div>
+                <div class="w-full bg-dataflowTextSecondary h-1 mt-1">
+                    <div class="bg-dataflowText h-full" style="width: {{ disk.getUsedPercentage() }};"></div>
                 </div>
             </a>
         {% endfor %}

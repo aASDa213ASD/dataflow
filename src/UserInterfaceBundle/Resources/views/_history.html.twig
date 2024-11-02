@@ -1,5 +1,1 @@
-{% for reference in history %}
-    <a href="{{ path('files', { path: attribute(reference, 'path') }) }}" class="hover:underline cursor-pointer" async="true">
-        {{attribute(reference, 'name')}}{{ not ends_with(attribute(reference, 'name'), directory_separator()) ? directory_separator()}}
-    </a>
-{% endfor %}
+{% for reference in history %}<a href="{{ path('files', { path: attribute(reference, 'path') }) }}" class="hover:underline cursor-pointer" async="true">{{attribute(reference, 'name')}}{{ not ends_with(attribute(reference, 'name'), directory_separator()) ? directory_separator()}}</a>{% endfor %}

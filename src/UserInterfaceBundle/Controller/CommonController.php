@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\UserInterfaceBundle\Controller;
 
+use App\AppBundle\Entity\ConfigurationDTO;
+use App\AppBundle\Service\ConfigService;
 use App\DiskBundle\Service\DiskService;
 use App\FileBundle\Service\FileService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -13,11 +15,13 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class CommonController extends AbstractController
 {
+	private ConfigService $config_service;
 	private DiskService $disk_service;
 	private FileService $file_service;
 
-	public function __construct(DiskService $disk_service, FileService $file_service)
+	public function __construct(ConfigService $config_service, DiskService $disk_service, FileService $file_service)
 	{
+		$this->config_service = $config_service;
 		$this->disk_service = $disk_service;
 		$this->file_service = $file_service;
 	}
@@ -26,9 +30,11 @@ class CommonController extends AbstractController
 	public function root(): Response
 	{
 		$disks = $this->disk_service->getAvailableDisks();
+		$config = $this->config_service->getConfig();
 
 		return $this->render('@UserInterface/root.html.twig', [
 			'disks' => $disks,
+			'config' => $config,
 		]);
 	}
 
@@ -65,13 +71,32 @@ class CommonController extends AbstractController
 		]);
 	}
 
-	#[Route('/settings', name: 'settings', priority: 1)]
-	public function settings(): Response
+	#[Route('/settings', name: 'settings')]
+	public function settings(Request $request): Response
 	{
-		$disks = $this->disk_service->getAvailableDisks();
+		if ($request->isMethod('POST'))
+		{
+			$payload = json_decode($request->getContent(), true);
 
-		return $this->render('@UserInterface/settings.html.twig', [
-			'disks' => $disks,
+			if (!empty($payload))
+			{
+				$config = new ConfigurationDTO(
+					$payload['operating_system'],
+					$payload['color_theme']
+				);
+			}
+			else
+			{
+				$config = new ConfigurationDTO();
+			}
+
+			$this->config_service->saveConfig($config);
+		}
+
+		$config = $this->config_service->getConfig();
+
+		return $this->render('@UserInterface/_settings.html.twig', [
+			'config' => $config,
 		]);
 	}
 }

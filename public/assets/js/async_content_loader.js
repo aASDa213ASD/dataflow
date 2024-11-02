@@ -1,4 +1,4 @@
-const THROTTLE_DELAY = 100; // milliseconds
+const THROTTLE_DELAY = 150; // milliseconds
 let LAST_LOAD_TIME = 0;
 
 async function loadContent(url, object_identifier)
@@ -18,7 +18,12 @@ async function loadContent(url, object_identifier)
 			const content = await response.text();
 			await updateBreadcrumbHistory(path);
 
+			// TODO: Don't append scripts to content maybe?
 			root_window.innerHTML = content;
+
+			const scripts = root_window.querySelectorAll('script');
+			executeScripts(scripts);
+
 			hookHrefs(object_identifier);
 		}
 		else
@@ -83,5 +88,29 @@ function hookHrefs(object_identifier)
 			const url = link.getAttribute('href');
 			loadContent(url, object_identifier);
 		});
+	});
+}
+
+function executeScripts(scripts)
+{
+	scripts.forEach((script) =>
+	{
+		const new_script = document.createElement('script');
+
+		if (script.src)
+		{
+			new_script.src = script.src;
+
+			new_script.onload = () =>
+			{
+				console.log(`Loaded script: ${script.src}`)
+			}
+		}
+		else
+		{
+			new_script.textContent = script.innerHTML;
+		}
+
+		document.body.appendChild(new_script);
 	});
 }

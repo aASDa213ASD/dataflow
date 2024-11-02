@@ -10,6 +10,13 @@
     src: url("../fonts/productsansmono/Product-Sans-Mono-Regular.ttf") format("truetype");
 }
 
+:root
+{
+    --bg-main: #000000;
+    --bg-secondary: #000000;
+    --text-main: #000000;
+    --text-secondary: #000000;
+}
 
 body
 {

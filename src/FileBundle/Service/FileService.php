@@ -43,14 +43,7 @@ class FileService
 
 			if (!is_dir($file_path))
 			{
-				try
-				{
-					$type = ucfirst(pathinfo($item, PATHINFO_EXTENSION));
-				}
-				catch (\Exception $e)
-				{
-					$type = 'Unknown';
-				}
+				$type = ucfirst(pathinfo($item, PATHINFO_EXTENSION));
 			}
 			else
 			{

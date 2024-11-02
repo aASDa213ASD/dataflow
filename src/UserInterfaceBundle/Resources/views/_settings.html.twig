@@ -1,0 +1,163 @@
+<style>
+    .coloris
+    {
+        width: 20px;
+        height: 20px;
+    }
+
+    .color-selector .clr-field button
+    {
+        width: 100%;
+        height: 100%;
+        margin-top: 0px !important;
+    }
+</style>
+
+<!--
+<div>
+    <div class="flex flex-wrap gap-1 text-sm">
+        {% for i in range(0, 2) %}
+        <div class="flex items-center me-1 mb-2">
+            <p for="folder-icon" class="me-2">Folder Icon</p>
+            <input id="folder-icon" class="bg-transparent w-28 border-b pb-1 text-center outline-none cursor-pointer" value="nf-custom-folder">
+        </div>
+        {% endfor %}
+    </div>
+</div>
+-->
+
+<div class="p-1 mb-10">
+    <div class="mb-10">
+        <h1 class="text-lg">Settings</h1>
+        <hr class="border-dataflowText opacity-50 my-1 mb-4">
+
+        <div class="flex text-sm mx-auto mb-10">
+            <label class="bg-dataflowBackground block mb-0 me-2">Operating system</label>
+            <select id="operating-system" class="bg-dataflowBackground block text-center rounded-none border-b pb-1 border-zinc-500 ring-none outline-none w-auto px-2" disabled>
+                <option value="Linux" selected>Linux</option>
+                <option value="Windows">Windows</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="mb-10">
+        <h1 class="text-lg">Appearance</h1>
+        <hr class="border-dataflowText opacity-50 my-1 mb-4">
+
+        <div class="mb-5">
+            <div class="flex flex-wrap gap-2 text-sm">
+                <div class="flex items-center me-3">
+                    <label class="text-sm me-2">Background accent</label>
+                    <div class="color-selector flex items-center">
+                        <div class="border border-white/50 rounded-[2px] w-[20px] h-[20px] clr-field" style="color: {{ config.getColorTheme()['background'] }}">
+                            <button type="button" aria-labelledby="clr-open-label"></button>
+                            <input id="color-background" class="opacity-0 cursor-pointer coloris" value="#141517">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center me-3">
+                    <label class="text-sm me-2">Main accent</label>
+                    <div class="color-selector flex items-center">
+                        <div class="border border-zinc-700 rounded-[2px] w-[20px] h-[20px] clr-field" style="color: {{ config.getColorTheme()['text'] }}">
+                            <button type="button" aria-labelledby="clr-open-label"></button>
+                            <input id="color-text" class="opacity-0 cursor-pointer coloris" value="#cbd5e1">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="flex p-1">
+    <div class="ms-auto">
+        <hr class="border-dataflowText opacity-50 my-1 mb-4">
+        <a id='configuration-save' class="ms-auto text-base rounded-sm py-2 px-4 hover:bg-white/10 cursor-pointer"><i class="nf nf-md-check_all mb-1 me-2"></i>Save</a>
+        <a id='configuration-reset' class="ms-auto text-base rounded-sm py-2 px-4 hover:bg-white/10 cursor-pointer"><i class="nf nf-md-restore mb-1 me-2"></i>Reset</a>
+    </div>
+</div>
+
+<script>
+	// Initialize Coloris color picker configuration
+	Coloris({
+		el: '.coloris',
+		theme: 'pill',
+		wrap: 'false',
+		themeMode: 'dark',
+		alpha: false,
+		formatToggle: false,
+		closeButton: false,
+		clearButton: false,
+		swatches: [],
+		margin: 0
+	});
+
+	(function() {
+		const adjustBrightness = (hex, percent) => {
+			hex = hex.replace(/^#/, '');
+			let [r, g, b] = [0, 2, 4].map(offset =>
+				parseInt(hex.substring(offset, offset + 2), 16)
+			);
+			[r, g, b] = [r, g, b].map(channel =>
+				Math.min(255, Math.max(0, Math.round(channel * (1 + percent / 100))))
+			);
+			return `#${[r, g, b].map(x => x.toString(16).padStart(2, '0')).join('')}`;
+		};
+
+		const saveConfigToFile = payload => {
+			fetch('/settings', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(payload),
+			})
+				.then(response => response.ok
+					? console.log('Configuration saved successfully!')
+					: console.error('Failed to save configuration.')
+				)
+				.catch(error => console.error('Error:', error));
+		};
+
+		const updateColorProperties = (inputId, cssVarMain, cssVarSecondary, brightnessAdjust) => {
+			const inputElement = document.getElementById(inputId);
+			inputElement?.addEventListener('change', event => {
+				const color = event.target.value;
+				document.documentElement.style.setProperty(cssVarMain, color);
+				document.documentElement.style.setProperty(cssVarSecondary, adjustBrightness(color, brightnessAdjust));
+			});
+		};
+
+		updateColorProperties('color-background', '--bg-main', '--bg-secondary', -15);
+		updateColorProperties('color-text', '--text-main', '--text-secondary', -50);
+
+		const setupButtonHandlers = () => {
+			const saveButton = document.querySelector('#configuration-save');
+			const resetButton = document.querySelector('#configuration-reset');
+
+			// Avoid adding multiple event listeners on reloading
+			if (!saveButton.hasAttribute('data-listener')) {
+				saveButton.setAttribute('data-listener', 'true');
+
+				saveButton.addEventListener('click', () => {
+					const payload = {
+						operating_system: document.getElementById('operating-system').value,
+						color_theme: {
+							background: document.getElementById('color-background').value,
+							'background-secondary': adjustBrightness(document.getElementById('color-background').value, -15),
+							text: document.getElementById('color-text').value,
+							'text-secondary': adjustBrightness(document.getElementById('color-text').value, -50),
+						}
+					};
+					saveConfigToFile(payload);
+				});
+			}
+
+			if (!resetButton.hasAttribute('data-listener')) {
+				resetButton.setAttribute('data-listener', 'true');
+				resetButton.addEventListener('click', () => saveConfigToFile({}));
+			}
+		};
+
+		setupButtonHandlers();
+	})();
+</script>

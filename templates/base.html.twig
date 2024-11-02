@@ -13,16 +13,26 @@
             {% include "js.html.twig" %}
         {% endblock %}
     </head>
-    <body class="h-screen px-[3px] py-[5px] bg-slateDarkest text-white overflow-y-auto">
+    <body class="h-screen px-[3px] py-[5px] bg-black text-dataflowText overflow-y-auto select-none">
         <!-- Main Container with Sidebar and Content Area -->
-        <div class="min-w-full min-h-full max-w-full max-h-full bg-slateLight shadow-neon-teal rounded-lg flex border border-gray-500">
+        <div class="min-w-full min-h-full max-w-full max-h-full bg-dataflowBackground shadow-neon-teal rounded-md flex border border-gray-500">
             {% block sidebar %}
             {% endblock %}
 
-            <main class="flex-1 p-4 overflow-y-auto">
+            <main class="flex-1 p-4 overflow-y-auto transition-all duration-300">
                 {% block body %}
                 {% endblock %}
             </main>
         </div>
     </body>
+    <script>
+	    document.addEventListener('DOMContentLoaded', () =>
+	    {
+			console.log(`config->getColorTheme() = {{ config.getColorTheme()['text'] }}`)
+		    document.documentElement.style.setProperty('--bg-main', '{{ config.getColorTheme()['background'] }}');
+		    document.documentElement.style.setProperty('--bg-secondary', '{{ config.getColorTheme()['background-secondary'] }}');
+		    document.documentElement.style.setProperty('--text-main', '{{ config.getColorTheme()['text'] }}')
+		    document.documentElement.style.setProperty('--text-secondary', '{{ config.getColorTheme()['text-secondary'] }}');
+	    });
+    </script>
 </html>

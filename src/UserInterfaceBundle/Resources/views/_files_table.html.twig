@@ -1,15 +1,15 @@
 <table class="table-auto w-full text-left text-[14px] overflow-hidden whitespace-nowrap text-ellipsis">
     <thead>
-    <tr class="text-zinc-500">
-        <th class="w-1/2">Name</th>
-        <th class="w-1/4">Size</th>
-        <th class="w-1/4">Type</th>
-        <th class="w-1/4">Date Modified</th>
+    <tr class="text-dataflowTextSecondary">
+        <th class="w-1/2 font-normal">Name</th>
+        <th class="w-1/4 font-normal">Size</th>
+        <th class="w-1/4 font-normal">Type</th>
+        <th class="w-1/4 font-normal">Date Modified</th>
     </tr>
     </thead>
     <tbody>
         {% for file in files %}
-            <tr class="text-slate-200 hover:bg-zinc-800 cursor-pointer">
+            <tr class="text-slate-200 hover:bg-white/10 cursor-pointer">
                 <td class="w-1/4 py-1">
                     {% if file.getType() == 'Folder' %}
                         <i class="nf nf-custom-folder px-1 mb-1 text-amber-100"></i>
@@ -19,15 +19,15 @@
 
                     {% if file.getType() == 'Folder' %}
                         <a href="{{ path('files', { 'path': path ~ directory_separator() ~ file.getName() }) }}" async="true">
-                            <span class="hover:underline">{{ file.getName() }}</span>
+                            <span class="text-dataflowText hover:underline">{{ file.getName() }}</span>
                         </a>
                     {% else %}
-                        <span class="hover:underline">{{ file.getName() }}</span>
+                        <span class="text-dataflowText hover:underline">{{ file.getName() }}</span>
                     {% endif %}
                 </td>
-                <td class="w-1/4">{{ bytesToReadableSize(file.getSize()) }}</td>
-                <td class="w-1/4">{{ file.getType() }}</td>
-                <td class="w-1/4">{{ file.getModificationTimeFormatted() }}</td>
+                <td class="w-1/4 text-dataflowText">{{ bytesToReadableSize(file.getSize()) }}</td>
+                <td class="w-1/4 text-dataflowText">{{ file.getType() }}</td>
+                <td class="w-1/4 text-dataflowText">{{ file.getModificationTimeFormatted() }}</td>
             </tr>
         {% endfor %}
     </tbody>
