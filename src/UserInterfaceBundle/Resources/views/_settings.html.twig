@@ -34,8 +34,7 @@
         <div class="flex text-sm mx-auto mb-10">
             <label class="bg-dataflowBackground block mb-0 me-2">Operating system</label>
             <select id="operating-system" class="bg-dataflowBackground block text-center rounded-none border-b pb-1 border-zinc-500 ring-none outline-none w-auto px-2" disabled>
-                <option value="Linux" selected>Linux</option>
-                <option value="Windows">Windows</option>
+                <option value="{{ config.getOperatingSystem() }}" selected>{{ config.getOperatingSystem() }}</option>
             </select>
         </div>
     </div>
