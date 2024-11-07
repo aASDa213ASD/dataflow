@@ -92,10 +92,10 @@ class FileService
         $finder->in($path)->depth('== 0')->sortByName();
 		$finder->notName(['*.sys', '*.tmp']);
 
-        if ($order === 'desc') 
+		if ($order === 'desc') 
 		{
-            $finder->reverseSorting();
-        }
+			$finder->reverseSorting();
+		}
 
         $files = [];
 		foreach ($finder as $file)
