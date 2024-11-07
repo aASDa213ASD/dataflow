@@ -51,12 +51,28 @@ class CommonController extends AbstractController
 	#[Route('/dev', name: 'files')]
 	public function getFilesTable(Request $request): Response
 	{
+		$order = $request->query->get('order', 'asc');
 		$path = $request->query->get('path');
 		$files = $this->file_service->getFiles($path);
 
 		return $this->render('@UserInterface/_files_table.html.twig', [
 			'files' => $files,
 			'path'  => $path,
+			'order' => $order
+		]);
+	}
+
+	#[Route('/ordered', name: 'files_ordered')]
+	public function ordered(Request $request): Response
+	{
+		$order = $request->query->get('order', 'asc');
+		$path = $request->query->get('path');
+		$files = $this->file_service->getSortedFiles($path, $order);
+		
+		return $this->render('@UserInterface/_files_table.html.twig', [
+			'files' => $files,
+			'path' => $path,
+			'order' => $order,
 		]);
 	}
 

@@ -1,7 +1,14 @@
 <table class="table-auto w-full text-left text-[14px] overflow-hidden whitespace-nowrap text-ellipsis">
     <thead>
     <tr class="text-dataflowTextSecondary">
-        <th class="w-1/2 font-normal">Name</th>
+        <th class="w-1/2 font-normal">
+            Name
+            {% if order == 'asc' %}
+                <a href="{{ path('files_ordered', { order: 'desc', path: path }) }}" async="true">↓</a>
+            {% else %}
+                <a href="{{ path('files_ordered', { order: 'asc', path: path }) }}" async="true">↑</a>
+            {% endif %}
+        </th>
         <th class="w-1/4 font-normal">Size</th>
         <th class="w-1/4 font-normal">Type</th>
         <th class="w-1/4 font-normal">Date Modified</th>

@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\FileBundle\Service;
 
-use App\AppBundle\Service\ConfigService;
 use App\DiskBundle\Entity\DiskDTO;
 use App\FileBundle\Entity\FileDTO;
+use Symfony\Component\Finder\Finder;
+use App\AppBundle\Service\ConfigService;
 
 class FileService
 {
@@ -84,4 +85,28 @@ class FileService
 	
 		return $history;
 	}
+
+	public function getSortedFiles(string $path, string $order = 'asc'): array
+    {
+        $finder = new Finder();
+        $finder->in($path)->depth('== 0')->sortByName();
+		$finder->notName(['*.sys', '*.tmp']);
+
+        if ($order === 'desc') {
+            $finder->reverseSorting();
+        }
+
+        $files = [];
+		foreach ($finder as $file) {
+			$file_path = $file->getRealPath() ?: $file->getPathname();
+			$item = $file->getFilename();
+			$type = $file->isDir() ? 'Folder' : 'File';
+			$size = $file->getSize();
+			$modificationTime = $file->getMTime();
+
+			$files[] = new FileDTO($file_path, $item, $type, $size, $modificationTime);
+		}
+
+        return $files;
+    }
 }
