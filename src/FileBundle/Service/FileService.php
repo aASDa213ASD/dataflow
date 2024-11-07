@@ -87,9 +87,9 @@ class FileService
 	}
 
 	public function getSortedFiles(string $path, string $order = 'asc'): array
-    {
-        $finder = new Finder();
-        $finder->in($path)->depth('== 0')->sortByName();
+	{
+		$finder = new Finder();
+		$finder->in($path)->depth('== 0')->sortByName();
 		$finder->notName(['*.sys', '*.tmp']);
 
 		if ($order === 'desc') 
@@ -97,7 +97,7 @@ class FileService
 			$finder->reverseSorting();
 		}
 
-        $files = [];
+		$files = [];
 		foreach ($finder as $file)
 		{
 			$file_path = $file->getRealPath() ?: $file->getPathname();
@@ -109,6 +109,6 @@ class FileService
 			$files[] = new FileDTO($file_path, $item, $type, $size, $modificationTime);
 		}
 
-        return $files;
-    }
+		return $files;
+	}
 }
