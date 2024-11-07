@@ -92,12 +92,14 @@ class FileService
         $finder->in($path)->depth('== 0')->sortByName();
 		$finder->notName(['*.sys', '*.tmp']);
 
-        if ($order === 'desc') {
+        if ($order === 'desc') 
+		{
             $finder->reverseSorting();
         }
 
         $files = [];
-		foreach ($finder as $file) {
+		foreach ($finder as $file)
+		{
 			$file_path = $file->getRealPath() ?: $file->getPathname();
 			$item = $file->getFilename();
 			$type = $file->isDir() ? 'Folder' : 'File';
