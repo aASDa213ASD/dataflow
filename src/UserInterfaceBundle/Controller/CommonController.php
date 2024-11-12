@@ -53,10 +53,10 @@ class CommonController extends AbstractController
 	{
 		$order = $request->query->get('order', 'asc');
 		$path = $request->query->get('path');
-		$files = $this->file_service->getFiles($path);
+		$directory = $this->file_service->scanDirectory($path);
 
 		return $this->render('@UserInterface/_files_table.html.twig', [
-			'files' => $files,
+			'directory' => $directory,
 			'path'  => $path,
 			'order' => $order
 		]);

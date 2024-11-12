@@ -1,41 +1,47 @@
-<table class="table-auto w-full text-left text-[14px] overflow-hidden whitespace-nowrap text-ellipsis">
+<table id="directory-table" class="table-auto w-full text-left text-[14px] overflow-hidden whitespace-nowrap text-ellipsis">
     <thead>
-    <tr class="text-dataflowTextSecondary">
-        <th class="w-1/2 font-normal">
-            Name
-            {% if order == 'asc' %}
-                <a href="{{ path('files_ordered', { order: 'desc', path: path }) }}" async="true">↓</a>
-            {% else %}
-                <a href="{{ path('files_ordered', { order: 'asc', path: path }) }}" async="true">↑</a>
-            {% endif %}
-        </th>
-        <th class="w-1/4 font-normal">Size</th>
-        <th class="w-1/4 font-normal">Type</th>
-        <th class="w-1/4 font-normal">Date Modified</th>
-    </tr>
+        <tr class="text-dataflowTextSecondary">
+            <th class="w-1/2 font-normal">Name</th>
+            <th class="w-1/4 font-normal">Size</th>
+            <th class="w-1/4 font-normal">Type</th>
+            <th class="w-1/4 font-normal">Date Modified</th>
+        </tr>
     </thead>
     <tbody>
-        {% for file in files %}
+        {% for folder in directory.getFolders() %}
             <tr class="text-slate-200 hover:bg-white/10 cursor-pointer">
                 <td class="w-1/4 py-1">
-                    {% if file.getType() == 'Folder' %}
-                        <i class="nf nf-custom-folder px-1 mb-1 text-amber-100"></i>
-                    {% else %}
-                        <i class="nf nf-md-file px-1 mb-1 text-slate-400"></i>
-                    {% endif %}
-
-                    {% if file.getType() == 'Folder' %}
-                        <a href="{{ path('files', { 'path': path ~ directory_separator() ~ file.getName() }) }}" async="true">
-                            <span class="text-dataflowText hover:underline">{{ file.getName() }}</span>
-                        </a>
-                    {% else %}
-                        <span class="text-dataflowText hover:underline">{{ file.getName() }}</span>
-                    {% endif %}
+                    <i class="nf nf-custom-folder px-1 mb-1 text-amber-100"></i>
+                    <a href="{{ path('files', { 'path': path ~ directory_separator() ~ folder.getName() }) }}" async="true">
+                        <span class="text-dataflowText hover:underline">{{ folder.getName() }}</span>
+                    </a>
                 </td>
-                <td class="w-1/4 text-dataflowText">{{ bytesToReadableSize(file.getSize()) }}</td>
+                <td class="w-1/4 text-dataflowText" data-sort="{{ folder.getSize() }}">{{ bytesToReadableSize(folder.getSize()) }}</td>
+                <td class="w-1/4 text-dataflowText">{{ folder.getType() }}</td>
+                <td class="w-1/4 text-dataflowText" data-sort="{{ folder.getModificationTime() }}">{{ folder.getModificationTimeFormatted() }}</td>
+            </tr>
+        {% endfor %}
+
+        {% for file in directory.getFiles() %}
+            <tr class="text-slate-200 hover:bg-white/10 cursor-pointer">
+                <td class="w-1/4 py-1">
+                    <i class="nf nf-md-file px-1 mb-1 text-slate-400"></i>
+                    <span class="text-dataflowText hover:underline">{{ file.getName() }}</span>
+                </td>
+                <td class="w-1/4 text-dataflowText" data-sort="{{ file.getSize() }}">{{ bytesToReadableSize(file.getSize()) }}</td>
                 <td class="w-1/4 text-dataflowText">{{ file.getType() }}</td>
-                <td class="w-1/4 text-dataflowText">{{ file.getModificationTimeFormatted() }}</td>
+                <td class="w-1/4 text-dataflowText" data-sort="{{ file.getModificationTime() }}">{{ file.getModificationTimeFormatted() }}</td>
             </tr>
         {% endfor %}
     </tbody>
 </table>
+
+<script>
+    $('#directory-table').DataTable({
+        'order': [],
+        'paging': false,
+        'searching': false,
+        'info': false,
+        'select': false,
+    });
+</script>
