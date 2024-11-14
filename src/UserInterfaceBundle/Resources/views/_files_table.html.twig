@@ -24,7 +24,7 @@
             <tr class="text-slate-200 hover:bg-white/10 cursor-pointer">
                 <td class="w-1/4 py-1">
                     <i class="nf nf-md-file px-1 mb-1 text-slate-400"></i>
-                    <span class="text-dataflowText hover:underline context-menu-interactable">{{ file.getName() }}</span>
+                    <span class="text-dataflowText hover:underline context-menu-interactable" data-path="{{ file.getPath() }}">{{ file.getName() }}</span>
                 </td>
                 <td class="w-1/4 text-dataflowText" data-sort="{{ file.getSize() }}">{{ bytesToReadableSize(file.getSize()) }}</td>
                 <td class="w-1/4 text-dataflowText" data-sort="{{ file.getModificationTime() }}">{{ file.getModificationTimeFormatted() }}</td>

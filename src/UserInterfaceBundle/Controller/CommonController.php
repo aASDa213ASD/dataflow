@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\UserInterfaceBundle\Controller;
 
-use App\AppBundle\Entity\ConfigurationDTO;
+use App\AppBundle\Entity\ColorThemeDto;
+use App\AppBundle\Entity\ConfigurationDto;
 use App\AppBundle\Service\ConfigService;
 use App\DiskBundle\Service\DiskService;
 use App\FileBundle\Service\FileService;
@@ -30,7 +31,7 @@ class CommonController extends AbstractController
 	public function root(): Response
 	{
 		$disks = $this->disk_service->getAvailableDisks();
-		$config = $this->config_service->getConfig();
+		$config = $this->config_service->get();
 
 		return $this->render('@UserInterface/root.html.twig', [
 			'disks' => $disks,
@@ -51,28 +52,12 @@ class CommonController extends AbstractController
 	#[Route('/dev', name: 'files')]
 	public function getFilesTable(Request $request): Response
 	{
-		$order = $request->query->get('order', 'asc');
 		$path = $request->query->get('path');
 		$directory = $this->file_service->scanDirectory($path);
 
 		return $this->render('@UserInterface/_files_table.html.twig', [
 			'directory' => $directory,
 			'path'  => $path,
-			'order' => $order
-		]);
-	}
-
-	#[Route('/ordered', name: 'files_ordered')]
-	public function ordered(Request $request): Response
-	{
-		$order = $request->query->get('order', 'asc');
-		$path = $request->query->get('path');
-		$files = $this->file_service->getSortedFiles($path, $order);
-		
-		return $this->render('@UserInterface/_files_table.html.twig', [
-			'files' => $files,
-			'path' => $path,
-			'order' => $order,
 		]);
 	}
 
@@ -96,23 +81,34 @@ class CommonController extends AbstractController
 
 			if (!empty($payload))
 			{
-				$config = new ConfigurationDTO(
+				$config = new ConfigurationDto(
 					$payload['operating_system'],
-					$payload['color_theme']
+					new ColorThemeDto(...$payload['color_theme']),
 				);
 			}
 			else
 			{
-				$config = new ConfigurationDTO();
+				$config = new ConfigurationDto();
 			}
 
-			$this->config_service->saveConfig($config);
+			$this->config_service->save($config);
 		}
 
-		$config = $this->config_service->getConfig();
+		$config = $this->config_service->get();
 
 		return $this->render('@UserInterface/_settings.html.twig', [
 			'config' => $config,
+		]);
+	}
+
+	#[Route('/file/properties/', name: 'file_properties')]
+	public function getFileProperties(Request $request): Response
+	{
+		$path = $request->query->get('path');
+		$file = $this->file_service->getFile($path);
+
+		return $this->render('@UserInterface/modal_properties.html.twig', [
+			'file' => $file
 		]);
 	}
 }

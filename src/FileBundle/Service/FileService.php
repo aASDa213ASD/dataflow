@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\FileBundle\Service;
 
-use App\FileBundle\Entity\FileDTO;
-use App\FileBundle\Entity\DirectoryDTO;
+use App\FileBundle\Entity\FileDto;
+use App\FileBundle\Entity\DirectoryDto;
 use App\AppBundle\Service\ConfigService;
 
 class FileService
@@ -17,16 +17,15 @@ class FileService
 		$this->config = $config;
 	}
 
-	/** Returns an array of files and folders */
-	public function scanDirectory(string $path): DirectoryDTO
+	public function scanDirectory(string $path): DirectoryDto
 	{
-		$directory = new DirectoryDTO();
-
 		if (!is_dir($path))
 		{
-			return $directory;
+			return new DirectoryDto();
 		}
 
+		$folders = [];
+		$files = [];
 		$items = scandir($path);
 
 		foreach ($items as $item)
@@ -47,23 +46,38 @@ class FileService
 
 			$type = is_dir($file_path) ? 'Folder' : ucfirst(pathinfo($item, PATHINFO_EXTENSION));
 			$size = filesize($file_path);
-			$modificationTime = filemtime($file_path);
+			$creation_time = filectime($file_path);
+			$modification_time = filemtime($file_path);
 
-			// Create FileDTO object
-			$fileDTO = new FileDTO($file_path, $item, $type, $size, $modificationTime);
+			$item = new FileDto($file_path, $item, $type, $size, $creation_time, $modification_time);
 
 			// Add to 'folders' or 'files' based on type
 			if ($type === 'Folder')
 			{
-				$directory->addFolder($fileDTO);
+				$folders[] = $item;
 			}
 			else
 			{
-				$directory->addFile($fileDTO);
+				$files[] = $item;
 			}
 		}
 
-		return $directory;
+		return new DirectoryDto($folders, $files);
+	}
+
+	public function getFile(string $path): ?FileDto
+	{
+		if (!is_readable($path))
+		{
+			return null;
+		}
+
+		$name = basename($path);
+		$type = is_dir($path) ? 'Folder' : ucfirst(pathinfo($path, PATHINFO_EXTENSION));
+		$size = filesize($path);
+		$modification_time = filemtime($path);
+
+		return new FileDto($path, $name, $type, $size, $modification_time);
 	}
 
 	public function generatePathHistory(string $path): array

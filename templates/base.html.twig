@@ -28,11 +28,10 @@
     <script>
 	    document.addEventListener('DOMContentLoaded', () =>
 	    {
-			console.log(`config->getColorTheme() = {{ config.getColorTheme()['text'] }}`)
-		    document.documentElement.style.setProperty('--bg-main', '{{ config.getColorTheme()['background'] }}');
-		    document.documentElement.style.setProperty('--bg-secondary', '{{ config.getColorTheme()['background-secondary'] }}');
-		    document.documentElement.style.setProperty('--text-main', '{{ config.getColorTheme()['text'] }}')
-		    document.documentElement.style.setProperty('--text-secondary', '{{ config.getColorTheme()['text-secondary'] }}');
+		    document.documentElement.style.setProperty('--bg-main', '{{ config.getColorTheme().getBackgroundAccent() }}');
+		    document.documentElement.style.setProperty('--bg-secondary', '{{ config.getColorTheme().getBackgroundSecondaryAccent() }}');
+		    document.documentElement.style.setProperty('--text-main', '{{ config.getColorTheme().getTextAccent() }}')
+		    document.documentElement.style.setProperty('--text-secondary', '{{ config.getColorTheme().getTextSecondaryAccent() }}');
 	    });
     </script>
 </html>

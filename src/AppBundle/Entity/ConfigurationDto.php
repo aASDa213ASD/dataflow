@@ -5,16 +5,11 @@ declare(strict_types=1);
 namespace App\AppBundle\Entity;
 use JsonSerializable;
 
-class ConfigurationDTO implements JsonSerializable
+readonly class ConfigurationDto implements JsonSerializable
 {
 	public function __construct(
-		private readonly string $operating_system = PHP_OS_FAMILY,
-		private readonly array $color_theme = [
-			'background' => '#141517',
-			'background-secondary' => '#19191c',
-			'text' => '#cbd5e1',
-			'text-secondary' => '#71717a'
-		]
+		private string $operating_system = PHP_OS_FAMILY,
+		private ColorThemeDto $color_theme = new ColorThemeDto(),
 	)
 	{
 
@@ -33,7 +28,7 @@ class ConfigurationDTO implements JsonSerializable
 		return $this->operating_system;
 	}
 
-	public function getColorTheme(): array
+	public function getColorTheme(): ColorThemeDto
 	{
 		return $this->color_theme;
 	}

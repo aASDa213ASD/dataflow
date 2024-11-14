@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\FileBundle\Entity;
 
-class DirectoryDTO
+readonly class DirectoryDto
 {
-	/** @var FileDTO[] */
+	/** @var FileDto[] */
 	private array $folders;
 
-	/** @var FileDTO[] */
+	/** @var FileDto[] */
 	private array $files;
 
 	public function __construct(array $folders = [], array $files = [])
@@ -26,18 +26,6 @@ class DirectoryDTO
 	public function getFiles(): array
 	{
 		return $this->files;
-	}
-
-	public function addFolder(FileDTO $new_folder): self
-	{
-		$this->folders[] = $new_folder;
-		return $this;
-	}
-
-	public function addFile(FileDTO $new_file): self
-	{
-		$this->files[] = $new_file;
-		return $this;
 	}
 }
 

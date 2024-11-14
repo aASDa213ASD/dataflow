@@ -1,0 +1,16 @@
+<!-- File Properties Modal (Unfinished) TODO: GENERATE THIS ON BACKEND INSTEAD LOL -->
+<div class="bg-dataflowSecondary border border-dataflowTextSecondary p-4 rounded-md shadow-lg w-[400px] h-[500px]">
+    <div class="flex">
+        <a class="text-lg font-bold">{{ file.getName() }}</a>
+        <div class="ms-auto">
+            <a onclick="hidePropertiesModal()" class="ms-auto text-xs rounded-sm p-1 cursor-pointer"><i class="nf nf-cod-close"></i></a>
+        </div>
+    </div>
+    <hr class="border-dataflowText opacity-50 my-3">
+    <div class="text-sm">
+        <p class="mb-3"><span class="font-bold me-1">Kind:</span><span>{{ file.getType()|upper }}</span></p>
+        <p class="mb-3"><span class="font-bold me-1">Location:</span><span class="select-all">{{ file.getPath() }}</span></p>
+        <p class="mb-3"><span class="font-bold me-1">Modified:</span><span>{{ file.getModificationTimeFormatted() }}</span></p>
+        <p class="mb-3"><span class="font-bold me-1">Size:</span><span>{{ bytesToReadableSize(file.getSize()) }}</span></p>
+    </div>
+</div>

@@ -4,21 +4,17 @@ declare(strict_types=1);
 
 namespace App\DiskBundle\Entity;
 
-class DiskDTO
+class DiskDto
 {
-	private string $name;
-	private string $mountpoint;
-	private int $size;
-	private int $used;
-	private float $used_percentage;
-
-	public function __construct(string $name, string $mountpoint, int $size, int $used, float $used_percentage)
+	public function __construct(
+		private readonly string $name,
+		private readonly string $mountpoint,
+		private readonly int $size,
+		private readonly int $used,
+		private readonly float $used_percentage
+	)
 	{
-		$this->name = $name;
-		$this->size = $size;
-		$this->mountpoint = $mountpoint;
-		$this->used = $used;
-		$this->used_percentage = $used_percentage;
+
 	}
 
 	public function getName(bool $readable = false): string

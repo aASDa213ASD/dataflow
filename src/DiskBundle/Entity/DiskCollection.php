@@ -17,7 +17,7 @@ class DiskCollection implements IteratorAggregate, Countable
 		$this->disks = $disks;
 	}
 
-	public function getOneByName(string $name): ?DiskDTO
+	public function getOneByName(string $name): ?DiskDto
 	{
 		foreach ($this->disks as $disk)
 		{
@@ -30,7 +30,7 @@ class DiskCollection implements IteratorAggregate, Countable
 		return null;
 	}
 
-	public function getOneByMountPoint(string $mountpoint): ?DiskDTO
+	public function getOneByMountPoint(string $mountpoint): ?DiskDto
 	{
 		foreach ($this->disks as $disk)
 		{
@@ -43,7 +43,7 @@ class DiskCollection implements IteratorAggregate, Countable
 		return null;
 	}
 
-	public function add(DiskDTO $disk): void
+	public function add(DiskDto $disk): void
 	{
 		$this->disks[] = $disk;
 	}

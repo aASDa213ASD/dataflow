@@ -13,7 +13,7 @@ class DirectorySeparator extends AbstractExtension
     {
         return [
             new TwigFunction('directory_separator', fn() => DIRECTORY_SEPARATOR),
-            new TwigFunction('ends_with', [$this, 'endsWith']),
+            new TwigFunction('endsWith', [$this, 'endsWith']),
         ];
     }
 

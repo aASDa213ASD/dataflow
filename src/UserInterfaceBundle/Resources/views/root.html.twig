@@ -7,26 +7,7 @@
 {% endblock %}
 
 {% block body %}
-    <!-- File Properties Modal (Unfinished) -->
-    <div id="properties-modal" class="hidden fixed inset-0 bg-zinc-900/60 flex items-center justify-center z-50">
-        <div class="bg-dataflowSecondary border border-dataflowTextSecondary p-4 rounded-md shadow-lg w-[400px] h-[500px]">
-            <div class="flex">
-                <a class="text-lg font-bold">FILE_NAME</a>
-                <div class="ms-auto">
-                    <a class="ms-auto text-xs rounded-sm p-2 hover:bg-white/10 cursor-pointer"><i class="nf nf-fa-minus"></i></a>
-                </div>
-            </div>
-            <hr class="border-dataflowText opacity-50 my-2">
-            <div class="text-sm">
-                <p class="my-5 text-zinc-500">This is unfinished piece of UI, you shouldn't see it yet.</p>
-                <p class="mb-1"><span class="font-bold me-1">Kind:</span><span>FILE_TYPE</span></p>
-                <p class="mb-3"><span class="font-bold me-1">Location:</span><span>FILE_PATH</span></p>
-                <p class="mb-1"><span class="font-bold me-1">Created:</span><span>FILE_CREATED_AT</span></p>
-                <p class="mb-3"><span class="font-bold me-1">Modified:</span><span>FILE_MODIFIED_AT</span></p>
-                <p class="mb-3"><span class="font-bold me-1">Size:</span><span>FILE_SIZE</span></p>
-            </div>
-        </div>
-    </div>
+    <div id="properties-modal" class="hidden fixed inset-0 backdrop-blur-[2px] flex items-center justify-center z-50 select-text"></div>
 
     <!-- File Context Menu (Unfinished) -->
     <div id="context-menu" class="hidden fixed z-50 bg-dataflowSecondary border border-dataflowTextSecondary rounded-md shadow-md">
@@ -43,7 +24,7 @@
             <li class="flex items-center py-2 px-3 text-red-300/40">
                 <i class="nf nf-md-delete_sweep_outline me-2"></i>Delete
             </li>
-            <li class="flex items-center py-2 px-3 text-zinc-600">
+            <li class="flex items-center py-2 px-3 text-dataflowText hover:bg-white/10 cursor-pointer" onclick="showPropertiesModal()">
                 <i class="nf nf-md-data_matrix_scan me-2"></i>Properties
             </li>
         </ul>
@@ -69,11 +50,12 @@
 	<div id="root-window">
 	</div>
 
+    <script src="{{ asset('assets/js/context_menu.js') }}"></script>
+
     <script>
 		document.addEventListener('DOMContentLoaded', () =>
         {
 	        loadContent('/disks', '#root-window');
 		});
     </script>
-    <script src="{{ asset('assets/js/context_menu.js') }}"></script>
 {% endblock %}

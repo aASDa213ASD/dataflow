@@ -6,18 +6,18 @@ namespace App\DiskBundle\Service;
 
 use App\AppBundle\Helper\BytesReader;
 use App\AppBundle\Service\ConfigService;
-use App\AppBundle\Entity\ConfigurationDTO;
+use App\AppBundle\Entity\ConfigurationDto;
 use App\DiskBundle\Entity\DiskCollection;
-use App\DiskBundle\Entity\DiskDTO;
+use App\DiskBundle\Entity\DiskDto;
 use RuntimeException;
 
 class DiskService
 {
-	private ConfigurationDTO $config;
+	private ConfigurationDto $config;
 
 	public function __construct(ConfigService $config_service)
 	{
-		$this->config = $config_service->getConfig();
+		$this->config = $config_service->get();
 	}
 
 	public function getAvailableDisks(): DiskCollection
@@ -42,7 +42,7 @@ class DiskService
 		{
 			[$filesystem, $size, $used, $avail, $used_percentage, $mountpoint] = preg_split('/\s+/', trim($line));
 
-			$disk = new DiskDTO(
+			$disk = new DiskDto(
 				$filesystem, $mountpoint,
 				(int)$size, (int)$used,
 				(float)rtrim($used_percentage, '%')
@@ -76,7 +76,7 @@ class DiskService
 			$used_bytes = $total_bytes - $free_bytes;
 			$used_percentage = $total_bytes > 0 ? ($used_bytes / $total_bytes) * 100 : 0;
 
-			$disk = new DiskDTO(
+			$disk = new DiskDto(
 				$drive, $drive,
 				$total_bytes, $used_bytes,
 				round($used_percentage)

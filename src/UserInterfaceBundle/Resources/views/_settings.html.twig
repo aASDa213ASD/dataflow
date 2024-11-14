@@ -48,7 +48,7 @@
                 <div class="flex items-center me-3">
                     <label class="text-sm me-2">Background accent</label>
                     <div class="color-selector flex items-center">
-                        <div class="border border-white/50 rounded-[2px] w-[20px] h-[20px] clr-field" style="color: {{ config.getColorTheme()['background'] }}">
+                        <div class="border border-white/50 rounded-[2px] w-[20px] h-[20px] clr-field" style="color: {{ config.getColorTheme().getBackgroundAccent() }}">
                             <button type="button" aria-labelledby="clr-open-label"></button>
                             <input id="color-background" class="opacity-0 cursor-pointer coloris" value="#141517">
                         </div>
@@ -58,7 +58,7 @@
                 <div class="flex items-center me-3">
                     <label class="text-sm me-2">Main accent</label>
                     <div class="color-selector flex items-center">
-                        <div class="border border-zinc-700 rounded-[2px] w-[20px] h-[20px] clr-field" style="color: {{ config.getColorTheme()['text'] }}">
+                        <div class="border border-zinc-700 rounded-[2px] w-[20px] h-[20px] clr-field" style="color: {{ config.getColorTheme().getTextAccent() }}">
                             <button type="button" aria-labelledby="clr-open-label"></button>
                             <input id="color-text" class="opacity-0 cursor-pointer coloris" value="#cbd5e1">
                         </div>
@@ -142,9 +142,9 @@
 						operating_system: document.getElementById('operating-system').value,
 						color_theme: {
 							background: document.getElementById('color-background').value,
-							'background-secondary': adjustBrightness(document.getElementById('color-background').value, -15),
+							'background_secondary': adjustBrightness(document.getElementById('color-background').value, -15),
 							text: document.getElementById('color-text').value,
-							'text-secondary': adjustBrightness(document.getElementById('color-text').value, -50),
+							'text_secondary': adjustBrightness(document.getElementById('color-text').value, -50),
 						}
 					};
 					saveConfigToFile(payload);

@@ -1,7 +1,7 @@
-<aside id="disk-sidebar" class="w-8 bg-dataflowSecondary rounded-l-lg text-[14px] min-h-full overflow-y-auto overflow-x-hidden transition-all duration-300">
+<aside id="disk-sidebar" class="w-8 bg-dataflowSecondary rounded-l-lg text-[16px] min-h-full overflow-y-auto overflow-x-hidden transition-all duration-300">
     <ul class="mt-[20px]">
         <div class="mb-3">
-            <a id="toggle-sidebar" class="mx-2 text-dataflowTextSecondary hover:text-white/80 cursor-pointer transition duration-200 ease-in-out" async="true">
+            <a id="toggle-sidebar" class="mx-2 text-dataflowTextSecondary hover:text-white/80 cursor-pointer transition duration-200 ease-in-out">
                 <i class="nf nf-fa-inbox mb-1"></i><a href="{{ path('disks') }}" class="py-5 m-0 text-dataflowTextSecondary hover:text-white/80 cursor-pointer transition duration-200 ease-in-out text-collapse-by-display" async="true">Disks</a>
             </a>
         </div>
@@ -42,7 +42,7 @@
 	{
 		const sidebar = document.getElementById('disk-sidebar');
 		const sidebar_original_width = 'w-44';
-		const sidebar_collapsed_width = 'w-7';
+		const sidebar_collapsed_width = 'w-8';
 
 		if (!is_collapsed)
 		{
