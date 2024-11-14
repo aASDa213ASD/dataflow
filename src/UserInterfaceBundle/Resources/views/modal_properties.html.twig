@@ -9,7 +9,7 @@
     <hr class="border-dataflowText opacity-50 my-3">
     <div class="text-sm">
         <p class="mb-3"><span class="font-bold me-1">Kind:</span><span>{{ file.getType()|upper }}</span></p>
-        <p class="mb-3"><span class="font-bold me-1">Location:</span><span class="select-all">{{ file.getPath() }}</span></p>
+        <p class="mb-3"><span class="font-bold me-1">Location:</span><span class="select-all hover:underline cursor-pointer">{{ file.getPath() }}</span></p>
         <p class="mb-3"><span class="font-bold me-1">Modified:</span><span>{{ file.getModificationTimeFormatted() }}</span></p>
         <p class="mb-3"><span class="font-bold me-1">Size:</span><span>{{ bytesToReadableSize(file.getSize()) }}</span></p>
     </div>

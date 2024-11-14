@@ -12,7 +12,7 @@
                 <td class="w-1/4 py-1">
                     <i class="nf nf-custom-folder px-1 mb-1 text-amber-100"></i>
                     <a href="{{ path('files', { 'path': path ~ directory_separator() ~ folder.getName() }) }}" async="true">
-                        <span class="text-dataflowText hover:underline context-menu-interactable">{{ folder.getName() }}</span>
+                        <span class="text-dataflowText hover:underline context-menu-interactable" data-path="{{ folder.getPath() }}">{{ folder.getName() }}</span>
                     </a>
                 </td>
                 <td class="w-1/4 text-dataflowText">{{ folder.getType() }}</td>
