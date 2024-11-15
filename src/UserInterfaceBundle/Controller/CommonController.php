@@ -53,7 +53,7 @@ class CommonController extends AbstractController
 	public function getFilesTable(Request $request): Response
 	{
 		$path = $request->query->get('path');
-		$directory = $this->file_service->scanDirectory($path);
+		$directory = $this->file_service->getDirectory($path);
 
 		return $this->render('@UserInterface/_files_table.html.twig', [
 			'directory' => $directory,
@@ -65,7 +65,7 @@ class CommonController extends AbstractController
 	public function getFileHistoryBreadcrumb(Request $request): Response
 	{
 		$path = $request->query->get('path');
-		$history = $this->file_service->generatePathHistory($path);
+		$history = $this->file_service->getHistory($path);
 
 		return $this->render('@UserInterface/_history.html.twig', [
 			'history' => $history,
@@ -107,7 +107,7 @@ class CommonController extends AbstractController
 		$path = $request->query->get('path');
 		$file = $this->file_service->getFile($path);
 
-		return $this->render('@UserInterface/modal_properties.html.twig', [
+		return $this->render('@UserInterface/modals/properties.html.twig', [
 			'file' => $file
 		]);
 	}

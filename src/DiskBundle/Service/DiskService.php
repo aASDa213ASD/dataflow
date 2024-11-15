@@ -26,7 +26,7 @@ class DiskService
 		{
 			'Linux' => $this->getLinuxDisks(),
 			'Windows' => $this->getWindowsDisks(),
-			default => throw new RuntimeException("Unsupported operating system."),
+			default => throw new RuntimeException('Unsupported operating system'),
 		};
 
 		return new DiskCollection($disks);
@@ -35,7 +35,7 @@ class DiskService
 	private function getLinuxDisks(): array
 	{
 		$disks = [];
-		$output = shell_exec("df -h --block-size=1 --output=source,size,used,avail,pcent,target | grep '^/dev'");
+		$output = shell_exec('df -h --block-size=1 --output=source,size,used,avail,pcent,target | grep "^/dev"');
 		$lines = array_filter(explode(PHP_EOL, trim($output)), fn($line) => !empty(trim($line)));
 
 		foreach ($lines as $line)
@@ -62,14 +62,14 @@ class DiskService
 
 		foreach ($drive_letters as $drive)
 		{
-			$diskInfo = shell_exec("fsutil volume diskfree {$drive}");
+			$disk_information = shell_exec("fsutil volume diskfree {$drive}");
 
-			if (!$diskInfo)
+			if (!$disk_information)
 			{
 				continue;
 			}
 
-			preg_match_all('/([\d,]+)\s?\ \(/', $diskInfo, $matches);
+			preg_match_all('/([\d,]+)\s?\ \(/', $disk_information, $matches);
 
 			$free_bytes = (int)str_replace(',', '', $matches[0][0]);
 			$total_bytes = (int)str_replace(',', '', $matches[0][1]);

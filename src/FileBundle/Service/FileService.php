@@ -17,7 +17,7 @@ class FileService
 		$this->config = $config;
 	}
 
-	public function scanDirectory(string $path): DirectoryDto
+	public function getDirectory(string $path): DirectoryDto
 	{
 		if (!is_dir($path))
 		{
@@ -32,13 +32,11 @@ class FileService
 		{
 			$file_path = $path . DIRECTORY_SEPARATOR . $item;
 
-			// Skip special directory entries
 			if ($item === '.' || $item === '..')
 			{
 				continue;
 			}
 
-			// Ensure we have permissions to read the path
 			if (!is_readable($file_path))
 			{
 				continue;
@@ -51,7 +49,6 @@ class FileService
 
 			$item = new FileDto($file_path, $item, $type, $size, $creation_time, $modification_time);
 
-			// Add to 'folders' or 'files' based on type
 			if ($type === 'Folder')
 			{
 				$folders[] = $item;
@@ -80,13 +77,36 @@ class FileService
 		return new FileDto($path, $name, $type, $size, $modification_time);
 	}
 
-	public function generatePathHistory(string $path): array
+	public function rename(string $path, string $new_name): bool
+	{
+		$directory = dirname($path);
+		$new_path  = $directory . DIRECTORY_SEPARATOR . $new_name;
+
+		return rename($path, $new_path);
+	}
+
+	public function move(string $path, string $destination): bool
+	{
+		return rename($path, $destination);
+	}
+
+	public function copy(string $path, string $destination): bool
+	{
+		return copy($path, $destination);
+	}
+
+	public function delete(string $path): bool
+	{
+		return unlink($path);
+	}
+
+	public function getHistory(string $path): array
 	{
 		$parts = explode(DIRECTORY_SEPARATOR, $path);
-		$accumulatedPath = array_shift($parts) . DIRECTORY_SEPARATOR;
+		$accumulated_path = array_shift($parts) . DIRECTORY_SEPARATOR;
 		$history[] = [
-			'path' => $accumulatedPath,
-			'name' => $accumulatedPath
+			'path' => $accumulated_path,
+			'name' => $accumulated_path
 		];
 
 		foreach ($parts as $part)
@@ -95,10 +115,11 @@ class FileService
 			{
 				continue;
 			}
-			
-			$accumulatedPath .= $part . DIRECTORY_SEPARATOR;
+
+			$accumulated_path .= $part . DIRECTORY_SEPARATOR;
+
 			$history[] = [
-				'path' => rtrim($accumulatedPath, DIRECTORY_SEPARATOR),
+				'path' => rtrim($accumulated_path, DIRECTORY_SEPARATOR),
 				'name' => $part
 			];
 		}

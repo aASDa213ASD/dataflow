@@ -1,0 +1,20 @@
+<div class="bg-dataflowSecondary border border-dataflowTextSecondary p-4 rounded-md shadow-lg w-[600px] h-[400px]">
+    <div class="flex items-center py-2 px-1 font-bold">
+        <i class="nf nf-md-file_move_outline me-2"></i>Move
+    </div>
+    <hr class="border-dataflowText opacity-50 my-3">
+    <div class="text-sm">
+        <p class="mb-2">Move file "{{ file.getName() }}" with location:</p>
+        <input type="text" value="/mnt/trunc/playground/cemu" class="w-full p-1 bg-transparent text-dataflowTextSecondary border-b-2 border-zinc-500 outline-none mb-5" disabled/>
+
+        <p class="mb-2">to:</p>
+        <input type="text" value="/mnt/trunc/playground/cemu" class="w-full p-1 bg-transparent text-dataflowText border-b-2 border-zinc-500 outline-none mb-5"/>
+    </div>
+    <div class="flex p-1">
+        <div class="ms-auto text-sm">
+            <hr class="border-dataflowText opacity-50 my-1 mb-4">
+            <a class="rounded-sm py-2 px-4 hover:bg-white/10 cursor-pointer"><i class="nf nf-md-check_all mb-1 me-2"></i>OK</a>
+            <a class="rounded-sm py-2 px-4 hover:bg-white/10 cursor-pointer"><i class="nf nf-md-cancel mb-1 me-2"></i>Cancel</a>
+        </div>
+    </div>
+</div>

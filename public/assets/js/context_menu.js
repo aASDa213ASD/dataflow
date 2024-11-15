@@ -25,7 +25,6 @@ function hideContextMenu()
 	context_menu.classList.add('hidden');
 }
 
-// Show properties modal function
 async function showPropertiesModal()
 {
 	if (!file_path)
@@ -34,25 +33,22 @@ async function showPropertiesModal()
 		return;
 	}
 
-	// Build the URL with the path parameter
 	const url = new URL('/file/properties/', window.location.origin);
 	url.searchParams.append('path', file_path);
 
 	try
 	{
-		// Send the request to get properties
 		const response = await fetch(url);
-		if (!response.ok) {
+
+		if (!response.ok)
+		{
 			throw new Error(`HTTP error! Status: ${response.status}`);
 		}
 
-		// Get the HTML content from the response
 		const html = await response.text();
-
-		// Insert the HTML into a designated modal content area
-		const propertiesModal = document.getElementById('properties-modal');
-		propertiesModal.innerHTML = html;
-		propertiesModal.classList.remove('hidden');
+		const modal_window = document.getElementById('modal');
+		modal_window.innerHTML = html;
+		modal_window.classList.remove('hidden');
 	}
 	catch (error)
 	{
@@ -62,9 +58,9 @@ async function showPropertiesModal()
 
 function hidePropertiesModal()
 {
-	const propertiesModal = document.getElementById('properties-modal');
-	propertiesModal.innerHTML = '';
-	propertiesModal.classList.add('hidden');
+	const modal_window = document.getElementById('modal');
+	modal_window.classList.add('hidden');
+	modal_window.innerHTML = '';
 }
 
 document.addEventListener('contextmenu', showContextMenu);
