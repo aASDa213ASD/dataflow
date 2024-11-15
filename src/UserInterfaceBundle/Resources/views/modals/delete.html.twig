@@ -10,8 +10,8 @@
     <div class="flex p-1">
         <div class="ms-auto text-sm">
             <hr class="border-dataflowText opacity-50 my-1 mb-4">
-            <a class="rounded-sm py-2 px-4 hover:bg-white/10 cursor-pointer" href="{{ path('file_delete', {'file': {{ file.getName() }}}) }}"><i class="nf nf-md-check_all mb-1 me-2"></i>Yes</a>
-            <a class="rounded-sm py-2 px-4 hover:bg-white/10 cursor-pointer"><i class="nf nf-md-cancel mb-1 me-2"></i>No</a>
+            <a id="confirmDelete" class="rounded-sm py-2 px-4 hover:bg-white/10 cursor-pointer"><i class="nf nf-md-check_all mb-1 me-2"></i>Yes</a>
+            <a onclick="hideDeleteModal()" class="rounded-sm py-2 px-4 hover:bg-white/10 cursor-pointer"><i class="nf nf-md-cancel mb-1 me-2"></i>No</a>
         </div>
     </div>
 </div>

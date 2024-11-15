@@ -87,13 +87,49 @@ async function showDeleteModal() {
         modal_window.innerHTML = html;
         modal_window.classList.remove('hidden');
 
-        // At this point, only the modal is displayed
-        console.log("Delete modal displayed successfully.");
+        const confirmDelete = modal_window.querySelector('#confirmDelete');
+        if (confirmDelete) {
+            confirmDelete.addEventListener('click', async (event) => {
+                event.preventDefault();
+
+                try 
+				{
+                    const delete_url = new URL('/file/delete', window.location.origin);
+					delete_url.searchParams.append('path', file_path);
+                    const postResponse = await fetch(delete_url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ path: file_path }),
+                    });
+
+                    if (!postResponse.ok) 
+					{
+                        throw new Error(`HTTP error! Status: ${postResponse.status}`);
+                    }
+
+                    modal_window.classList.add('hidden');
+                    window.location.reload();
+                } 
+				catch (postError) 
+				{
+                    console.error("Error submitting the deletion request:", postError);
+                }
+            });
+        }
     } 
 	catch (error) 
 	{
-        console.error("Error loading delete modal:", error);
+        console.error("Error deleting file:", error);
     }
+}
+
+function hideDeleteModal()
+{
+	const modal_window = document.getElementById('modal');
+	modal_window.classList.add('hidden');
+	modal_window.innerHTML = '';
 }
 
 document.addEventListener('contextmenu', showContextMenu);
