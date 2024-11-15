@@ -63,6 +63,39 @@ function hidePropertiesModal()
 	modal_window.innerHTML = '';
 }
 
+async function showDeleteModal() {
+    if (!file_path) {
+        console.error("No file path available for deletion.");
+        return;
+    }
+
+    const url = new URL('/file/delete/', window.location.origin); // Adjust to your endpoint
+    url.searchParams.append('path', file_path);
+
+    try 
+	{
+        // Fetch and display the delete confirmation modal
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        // Display the modal with content from delete.html.twig
+        const html = await response.text();
+        const modal_window = document.getElementById('modal');
+        modal_window.innerHTML = html;
+        modal_window.classList.remove('hidden');
+
+        // At this point, only the modal is displayed
+        console.log("Delete modal displayed successfully.");
+    } 
+	catch (error) 
+	{
+        console.error("Error loading delete modal:", error);
+    }
+}
+
 document.addEventListener('contextmenu', showContextMenu);
 document.addEventListener('click', hideContextMenu);
 main.addEventListener('scroll', hideContextMenu);
