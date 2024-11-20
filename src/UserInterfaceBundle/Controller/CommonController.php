@@ -115,20 +115,19 @@ class CommonController extends AbstractController
 	#[Route('/file/delete', name: 'file_delete', methods: ['GET', 'POST'])]
 	public function deleteFile(Request $request): Response
 	{
-		$path = $request->query->get('path');
+		$path = $request->query->get('path'); 
 		$file = $this->file_service->getFile($path);
-		if ($request->isMethod('POST')) 
-		{
+		if ($request->isMethod('POST')) {
 			$filePath = $file->getPath();
 			$directoryPath = dirname($filePath);
-			// dd($directoryPath);
+
 			$this->file_service->delete($filePath);
-			// $directoryPath = dirname($filePath);
-    		return $this->redirectToRoute('files', ['path' => $directoryPath]);
+			return $this->redirectToRoute('files', ['path' => $directoryPath]);
 		}
 
 		return $this->render('@UserInterface/modals/delete.html.twig', [
-			'file' => $file
+			'file' => $file,
 		]);
 	}
+
 }
