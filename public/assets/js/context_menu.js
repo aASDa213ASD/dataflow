@@ -118,12 +118,77 @@ async function showDeleteModal() {
                 }
             });
         }
+		handleConfirmDelete();
     } 
 	catch (error) 
 	{
         console.error("Error deleting file:", error);
     }
 }
+
+async function handleConfirmDelete() {
+    const confirmDeleteButton = document.getElementById('confirmDelete');
+
+    if (!confirmDeleteButton) {
+        console.error("Confirm delete button not found. This method will not execute.");
+        return;
+    }
+
+    confirmDeleteButton.addEventListener('click', async (event) => {
+        event.preventDefault();
+
+        if (!file_path) {
+            console.error("File path is not provided for deletion.");
+            alert("Error: File path is missing. Unable to proceed with deletion.");
+            return;
+        }
+
+        // Extract the current path from the query string
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentPath = urlParams.get('path'); // Get the `path` parameter
+
+        if (!currentPath) {
+            console.error("Current path is not available in the URL.");
+            alert("Error: Unable to determine the current directory. Please ensure the URL contains a valid path.");
+            return;
+        }
+
+        console.log("Current path extracted:", currentPath); // Debugging log
+
+        try {
+            const deleteUrl = new URL('/file/delete', window.location.origin);
+
+            // Send the POST request to the server
+            const response = await fetch(deleteUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ path: file_path }),
+            });
+
+            if (response.ok) {
+                // Remove the file from the UI
+                const fileElement = document.querySelector(`[data-path="${file_path}"]`);
+                if (fileElement) {
+                    fileElement.remove(); // Remove the deleted file from the UI
+                }
+
+                alert(`File deleted successfully.`);
+            } else {
+                const errorMessage = await response.text();
+                console.error("Failed to delete the file:", errorMessage);
+                alert(`Error: Could not delete the file. Server responded with status ${response.status}.`);
+            }
+        } catch (error) {
+            console.error("Error handling file deletion:", error);
+            alert("Error: Something went wrong while deleting the file.");
+        }
+    });
+}
+
+
+
 
 function hideDeleteModal()
 {

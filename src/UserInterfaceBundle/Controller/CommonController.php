@@ -120,8 +120,10 @@ class CommonController extends AbstractController
 		if ($request->isMethod('POST')) 
 		{
 			$filePath = $file->getPath();
-			$this->file_service->delete($filePath);
 			$directoryPath = dirname($filePath);
+			// dd($directoryPath);
+			$this->file_service->delete($filePath);
+			// $directoryPath = dirname($filePath);
     		return $this->redirectToRoute('files', ['path' => $directoryPath]);
 		}
 
