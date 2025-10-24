@@ -17,3 +17,7 @@ Two factors played the role: 1 - We've never found a good looking file manager o
 This feature is now mandatory for the [explorer.exe](https://en.wikipedia.org/wiki/File_Explorer) to work which essentially not only the file manager but also the holder of your desktop. What Microsoft did is simple - Recall is now a dependency of the most vital process and if you ever try to remove this feature for it to never magically turn on in the background while you sleep - you will lose your [explorer.exe](https://en.wikipedia.org/wiki/File_Explorer) therefore your file manager.
 
 So we decided to make something of our own craft to work with files on both operating systems inside of any browser of your taste on the most popular web oriented language [PHP](https://en.wikipedia.org/wiki/PHP) with not less known framework for it [Symfony](https://symfony.com/what-is-symfony) and make it look good using [Tailwind](https://tailwindcss.com/).
+
+# Look
+![Screenshot](.github/ui_1.jpg)
+![Screenshot](.github/ui_2.jpg)
